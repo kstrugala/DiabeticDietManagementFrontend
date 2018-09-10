@@ -1,0 +1,20 @@
+body
+{
+    background: #f7f7f7;
+}
+
+.login-page
+{
+    height: 100%;
+}
+
+.login-page > .login-form
+{
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+
+}
+
+
