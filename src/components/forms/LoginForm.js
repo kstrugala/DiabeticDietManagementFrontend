@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, Form, Grid, Header, Segment, Message } from 'semantic-ui-react'
 import Validator from 'validator'
+import PropTypes from 'prop-types'
+
 
 class LoginForm extends React.Component {
     
@@ -22,6 +24,11 @@ class LoginForm extends React.Component {
         // Validate data
         const errors = this.validate(this.state.data);
         this.setState({ errors });
+        if(Object.keys(errors).length === 0)
+        {
+            this.props.submit(this.state.data);
+        }
+
     }
      
     validate = data =>
@@ -90,6 +97,8 @@ class LoginForm extends React.Component {
     }
 };
 
-
+LoginForm.propTypes = {
+    submit: PropTypes.func.isRequired
+};
 
 export default LoginForm;
