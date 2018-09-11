@@ -31,7 +31,7 @@ class LoginForm extends React.Component {
             }).catch(err=>{
                 if(err.response.status === 400)
                 {
-                    let e={}
+                    const e={}
                     e.invalidCredentials="invalid_credentials";
                     this.setState({errors:e});
                 }
