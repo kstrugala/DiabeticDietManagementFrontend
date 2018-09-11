@@ -26,9 +26,18 @@ class LoginForm extends React.Component {
         this.setState({ errors });
         if(Object.keys(errors).length === 0)
         {
-            this.props.submit(this.state.data);
+            this.props.submit(this.state.data).then(()=>{
+               
+            }).catch(err=>{
+                if(err.response.status === 400)
+                {
+                    let e={}
+                    e.invalidCredentials="invalid_credentials";
+                    this.setState({errors:e});
+                }
+            });;
+            
         }
-
     }
      
     validate = data =>
@@ -88,6 +97,12 @@ class LoginForm extends React.Component {
                         <Message negative>
                             <Message.Header>Nieprawidłowe hasło</Message.Header>
                             <p>Hasło nie może być puste</p>
+                        </Message>
+                        }
+                        {errors.invalidCredentials &&
+                        <Message negative>
+                            <Message.Header>Nieprawidłowe dane logowania</Message.Header>
+                            <p>Nieprawidłowa nazwa użytkownika lub hasło</p>
                         </Message>
                         }
                     </Grid.Column>

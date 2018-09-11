@@ -1,12 +1,17 @@
 import React from 'react'
-import LoginForm  from '../forms/LoginForm'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import LoginForm  from '../forms/LoginForm';
+import { login } from '../../actions/auth';
 
 class LoginPage extends React.Component
 {
     submit = (data) =>
-    {
-        console.log(data);
-    }
+        this.props.login(data).then(()=>{
+            
+        });
+
+    
     render()
     {
         return(
@@ -17,6 +22,8 @@ class LoginPage extends React.Component
     }
 }
 
+LoginPage.propTypes = {
+    login: PropTypes.func.isRequired
+};
 
-
-export default LoginPage;
+export default connect(null, { login })(LoginPage);

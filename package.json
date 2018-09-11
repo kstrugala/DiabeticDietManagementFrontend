@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@types/react-redux": "^6.0.7",
+    "axios": "^0.18.0",
+    "jwt-decode": "^2.2.0",
     "prop-types": "^15.6.2",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
@@ -35,5 +37,6 @@
     "eslint-plugin-react": "^7.11.1",
     "prettier": "^1.14.2",
     "redux-devtools-extension": "^2.13.5"
-  }
+  },
+  "proxy": "http://localhost:51879"
 }
