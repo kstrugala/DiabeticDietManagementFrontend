@@ -26,14 +26,19 @@ class LoginForm extends React.Component {
         this.setState({ errors });
         if(Object.keys(errors).length === 0)
         {
+            this.setState({loading:true});
             this.props.submit(this.state.data).then(()=>{
                
             }).catch(err=>{
-                if(err.response.status === 400)
+                this.setState({loading:false});
+                if(typeof(err.response) !== "undefined")
                 {
-                    const e={}
-                    e.invalidCredentials="invalid_credentials";
-                    this.setState({errors:e});
+                    if(err.response.status === 400)
+                    {
+                        const e={}
+                        e.invalidCredentials="invalid_credentials";
+                        this.setState({errors:e});
+                    }
                 }
             });;
             
@@ -50,7 +55,7 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        const { data, errors } = this.state;
+        const { data, errors, loading } = this.state;
 
         return (
             <div className='login-form'>
@@ -59,7 +64,7 @@ class LoginForm extends React.Component {
                         <Header as='h2' color='teal' textAlign='center'>
                             Zaloguj się
                         </Header>
-                        <Form size='large' onSubmit={this.onSubmit}>
+                        <Form size='large' onSubmit={this.onSubmit} loading={loading}>
                             <Segment stacked>
                                 <Form.Input 
                                     fluid icon='user'
