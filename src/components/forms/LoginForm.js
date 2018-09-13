@@ -94,7 +94,7 @@ class LoginForm extends React.Component {
                         </Form>
                         {errors.email && 
                         <Message negative>
-                            <Message.Header>Nieprawidłowy adres email</Message.Header>
+                            <Message.Header>Nieprawidłowy adres e-mail</Message.Header>
                             <p>Podaj prawidłowy adres e-mail <br /> (przykładowy adres example@example.com)</p>
                         </Message>
                         }

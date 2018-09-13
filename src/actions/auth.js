@@ -1,5 +1,5 @@
-import jwt_decode from 'jwt-decode'
-import { USER_LOGGED_IN } from '../types';
+import jwtDecode from 'jwt-decode'
+import { USER_LOGGED_IN, USER_LOGGED_OUT } from '../types';
 import api from '../api'
 
 export const userLoggedIn = userData => ({
@@ -7,12 +7,14 @@ export const userLoggedIn = userData => ({
     userData
 });
 
+export const userLoggedOut = () => ({
+    type: USER_LOGGED_OUT
+});
+
 export const login = credentials => dispatch =>
     api.user.login(credentials).then(jwtData => 
     {
-        const decoded = jwt_decode(jwtData.token);
-        // console.log(decoded);
-
+        const decoded = jwtDecode(jwtData.token);
         const userData = {};
         userData.email = decoded.sub;
         userData.role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
@@ -22,4 +24,8 @@ export const login = credentials => dispatch =>
 
         dispatch (userLoggedIn(userData));
     });
-    
+
+export const logout = () => dispatch => {
+    localStorage.removeItem("tokenJWT");
+    dispatch (userLoggedOut({}));
+}

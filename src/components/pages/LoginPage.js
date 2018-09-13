@@ -7,19 +7,31 @@ import { login } from '../../actions/auth';
 
 class LoginPage extends React.Component
 {
+    
+
+    componentDidMount = () =>
+    {
+        this.redirect();
+    }
+
     submit = (data) =>
         this.props.login(data).then(()=>{
-            if(this.props.role === "admin")
-            {
-                this.props.history.push("/admin");
-            }
-            else if(this.props.role === "Doctor")
-            {
-                console.log("doctor");
-            }
+            this.redirect();       
         });
 
-    
+    redirect = () =>
+    {
+        if(this.props.role === "admin")
+        {
+            this.props.history.push("/admin");
+        }
+        else if(this.props.role === "Doctor")
+        {
+            console.log("doctor");
+        }
+    }
+
+
     render()
     {
         return(
@@ -32,10 +44,11 @@ class LoginPage extends React.Component
 
 LoginPage.propTypes = {
     login: PropTypes.func.isRequired,
-    role: PropTypes.string.isRequired,
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
-    }).isRequired
+    }).isRequired,
+    // eslint-disable-next-line
+    role: PropTypes.string
 };
 
 const mapStateToProps = state =>

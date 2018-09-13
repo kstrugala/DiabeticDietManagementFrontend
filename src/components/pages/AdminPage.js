@@ -2,11 +2,19 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import PropTypes from "prop-types";
-
 import { Container, Dropdown, Header, Menu } from "semantic-ui-react";
+import * as actions from "../../actions/auth"
 
 class AdminPage extends React.Component {
+ 
+    logoutClicked = ()=>{
+        this.props.logout();
+        this.props.history.push("/");
+    }
+
     render() {
+        const { logoutClicked } = this;
+
         if (!this.props.isAuthenticated) {
             return <Redirect to="/" />;
         }
@@ -21,21 +29,9 @@ class AdminPage extends React.Component {
                         <Menu.Item as="a">Home</Menu.Item>
 
                         <Menu.Menu position="right">
-                            <Dropdown item simple text="Dropdown">
+                            <Dropdown item simple text="Konto">
                                 <Dropdown.Menu>
-                                    <Dropdown.Item>List Item</Dropdown.Item>
-                                    <Dropdown.Item>List Item</Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Header>Header Item</Dropdown.Header>
-                                    <Dropdown.Item>
-                                        <i className="dropdown icon" />
-                                        <span className="text">Submenu</span>
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item>List Item</Dropdown.Item>
-                                            <Dropdown.Item>List Item</Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown.Item>
-                                    <Dropdown.Item>List Item</Dropdown.Item>
+                                    <Dropdown.Item onClick={logoutClicked}>Wyloguj</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Menu.Menu>
@@ -58,7 +54,11 @@ class AdminPage extends React.Component {
 }
 
 AdminPage.propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired
+    isAuthenticated: PropTypes.bool.isRequired,  
+    logout: PropTypes.func.isRequired,
+    history: PropTypes.shape({
+        push: PropTypes.func.isRequired
+    }).isRequired
 };
 
 const mapStateToProps = state => {
@@ -75,5 +75,5 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    {}
+    { logout: actions.logout }
 )(AdminPage);
