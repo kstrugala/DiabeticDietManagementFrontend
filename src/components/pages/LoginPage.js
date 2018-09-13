@@ -27,7 +27,11 @@ class LoginPage extends React.Component
         }
         else if(this.props.role === "Doctor")
         {
-            console.log("doctor");
+            this.props.history.push("/doctor");
+        }
+        else if(this.props.role === "Receptionist")
+        {
+            this.props.history.push("/receptionist");
         }
     }
 

@@ -6,15 +6,11 @@ import { Container, Dropdown, Menu, Icon } from "semantic-ui-react";
 import * as actions from "../../actions/auth"
 
 import PatientsPartial from "../partials/PatientsPartial";
-import DoctorsPartial from "../partials/DoctorsPartial";
-import ReceptionistPartial from "../partials/ReceptionistPartial";
 
-class AdminPage extends React.Component {
+class DoctorPage extends React.Component {
  
     state = {
         showPatients: true, 
-        showDoctors: false,
-        showReceptionists:false
     }
 
     logoutClicked = ()=>{
@@ -24,30 +20,14 @@ class AdminPage extends React.Component {
 
     showPatientClicked = () =>{
         this.setState({
-            showPatients: true, 
-            showDoctors: false,
-            showReceptionists:false
+            showPatients: true
         });
     }
 
-    showDoctorsClicked = () =>{
-        this.setState({
-            showPatients: false, 
-            showDoctors: true,
-            showReceptionists:false
-        });
-    }
-
-    showReceptionistsClicked = () =>{
-        this.setState({
-            showPatients: false, 
-            showDoctors: false,
-            showReceptionists:true
-        });
-    }
+    
 
     render() {
-        const { showPatients, showDoctors, showReceptionists } = this.state;
+        const { showPatients } = this.state;
         const { logoutClicked } = this;
         
         if (!this.props.isAuthenticated) {
@@ -62,8 +42,7 @@ class AdminPage extends React.Component {
               Diabetic Diet Management
                         </Menu.Item>
                         <Menu.Item as="a" onClick={this.showPatientClicked}><Icon name='users' />Pacjenci</Menu.Item>
-                        <Menu.Item as="a" onClick={this.showReceptionistsClicked}><Icon name='user' />Rejstratorzy</Menu.Item>
-                        <Menu.Item as="a" onClick={this.showDoctorsClicked}><Icon name='doctor' />Lekarze</Menu.Item>
+                        
 
                         <Menu.Menu position="right">
                             <Dropdown item simple text="Konto">
@@ -77,15 +56,13 @@ class AdminPage extends React.Component {
 
                 <Container style={{ marginTop: "4em", background: "rgb(255, 255, 255)", boxShadow: "rgb(204, 204, 204) 0px 1px 2px" }}>
                     {showPatients ? <PatientsPartial /> : null}
-                    {showDoctors ? <DoctorsPartial /> : null}
-                    {showReceptionists ? <ReceptionistPartial /> : null}
                 </Container>
             </div>
         );
     }
 }
 
-AdminPage.propTypes = {
+DoctorPage.propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,  
     logout: PropTypes.func.isRequired,
     history: PropTypes.shape({
@@ -96,7 +73,7 @@ AdminPage.propTypes = {
 const mapStateToProps = state => {
     const props = {};
     if (typeof state.user.userData !== "undefined") {
-        if (state.user.userData.role === "admin") {
+        if (state.user.userData.role === "Doctor") {
             props.isAuthenticated = true;
         }
     } else {
@@ -108,4 +85,4 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     { logout: actions.logout }
-)(AdminPage);
+)(DoctorPage);
