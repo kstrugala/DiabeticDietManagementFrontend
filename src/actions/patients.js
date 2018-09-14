@@ -7,6 +7,4 @@ export const getPatients = patients =>({
 });
 
 export const getPatientsInfo = query => dispatch =>
-{
-    api.patients.get(query).then(patientsData => dispatch(getPatients(patientsData)));
-} 
+    api.patients.get(query).then(patientsData => dispatch(getPatients(patientsData))) 

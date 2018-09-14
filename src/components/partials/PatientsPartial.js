@@ -1,15 +1,52 @@
 import React from 'react'
-import { Header, Segment, Menu, Input, Icon } from 'semantic-ui-react';
+import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer } from 'semantic-ui-react';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getPatientsInfo } from "../../actions/patients"
 
 class PatientsPartial extends React.Component {
-    search = (e) =>
-    {
-        const query = {page:1, pageSize:100, lastName:e.target.value }
-        this.props.getPatientsInfo(query);
+
+    state = {
+        queryLastName:"",
+        queryPage:1,
+        queryPageSize:20,
+        loading: false
+
     }
+    
+    componentDidMount()
+    {
+        this.fetchPatients();
+    }
+
+    onSearchChange = (e) =>
+    {
+        clearTimeout(this.timer);
+        this.setState({queryLastName:e.target.value})
+        this.timer = setTimeout(this.fetchPatients, 1000);
+    }
+
+    fetchPatients = () =>
+    {
+        let query;
+        if(!this.state.queryLastName)
+        {
+            query = { page:this.queryPage, pageSize:this.queryPageSize};
+        }
+        else
+        {
+            query = {lastName:this.state.queryLastName, page:this.queryPage, pageSize:this.queryPageSize};
+        }
+        this.setState({loading: true})
+        
+
+
+        this.props.getPatientsInfo(query).then(()=>{this.setState({loading:false})});
+    }
+
+   
+    
+
     render() {
         return (
             <Segment>
@@ -22,13 +59,67 @@ class PatientsPartial extends React.Component {
 
                     <Menu.Menu position='right'>
                         <Menu.Item>
-                            <Input icon='search' onChange={this.search} placeholder='Szukaj...' />
+                            <Input icon='search' onChange={this.onSearchChange} placeholder='Szukaj...' />
                         </Menu.Item>
                     </Menu.Menu>
                 </Menu>
 
                 <Segment>
-                    {typeof(this.props.patients)!=="undefined" ? this.props.patients.map(p=><div>{p.id}: {p.firstName} {p.lastName}</div>):null}
+                    {this.state.loading &&
+                    <Dimmer active inverted>
+                        <Loader size='large'>Pobieranie danych...</Loader>
+                    </Dimmer>
+                    }
+                    
+                    <Table  celled>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>Imię</Table.HeaderCell>
+                                <Table.HeaderCell>Nazwisko</Table.HeaderCell>
+                                <Table.HeaderCell>Szczegóły</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header>
+
+                        <Table.Body>
+
+                            {typeof(this.props.patients)!=="undefined" ? 
+                                this.props.patients.map(p=>
+                                    <Table.Row key={p.id}>
+                                        <Table.Cell>
+                                            {p.firstName}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {p.lastName}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {p.id}
+                                        </Table.Cell>
+                                    </Table.Row>) 
+                                :null}
+                            
+                    
+                        </Table.Body>
+                        <Table.Footer>
+                            <Table.Row>
+                                <Table.HeaderCell colSpan='3'>
+                                    <Menu floated='right' pagination>
+                                        <Menu.Item as='a' icon>
+                                            <Icon name='chevron left' />
+                                        </Menu.Item>
+                                        <Menu.Item as='a'>1</Menu.Item>
+                                        <Menu.Item as='a'>2</Menu.Item>
+                                        <Menu.Item as='a'>3</Menu.Item>
+                                        <Menu.Item as='a'>4</Menu.Item>
+                                        <Menu.Item as='a' icon>
+                                            <Icon name='chevron right' />
+                                        </Menu.Item>
+                                    </Menu>
+                                </Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Footer>
+                    </Table>
+                    
+
                 </Segment>
             </Segment>
 
