@@ -3,13 +3,15 @@ import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer } from 'seman
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getPatientsInfo } from "../../actions/patients"
+import PaginationPartial from "./Pagination"
+
 
 class PatientsPartial extends React.Component {
 
     state = {
         queryLastName:"",
         queryPage:1,
-        queryPageSize:20,
+        queryPageSize:1,
         loading: false
 
     }
@@ -26,16 +28,22 @@ class PatientsPartial extends React.Component {
         this.timer = setTimeout(this.fetchPatients, 1000);
     }
 
+    onPageChange = (e, { activePage })=>{
+        this.setState({queryPage: activePage});
+        this.fetchPatients();
+        };
+
+
     fetchPatients = () =>
     {
         let query;
         if(!this.state.queryLastName)
         {
-            query = { page:this.queryPage, pageSize:this.queryPageSize};
+            query = { page:this.state.queryPage, pageSize:this.state.queryPageSize};
         }
         else
         {
-            query = {lastName:this.state.queryLastName, page:this.queryPage, pageSize:this.queryPageSize};
+            query = {lastName:this.state.queryLastName, page:this.state.queryPage, pageSize:this.state.queryPageSize};
         }
         this.setState({loading: true})
         
@@ -44,8 +52,14 @@ class PatientsPartial extends React.Component {
         this.props.getPatientsInfo(query).then(()=>{this.setState({loading:false})});
     }
 
-   
-    
+    isEmpty = (obj) => {
+        for(var key in obj) {
+            if(obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
+
 
     render() {
         return (
@@ -76,6 +90,7 @@ class PatientsPartial extends React.Component {
                             <Table.Row>
                                 <Table.HeaderCell>Imię</Table.HeaderCell>
                                 <Table.HeaderCell>Nazwisko</Table.HeaderCell>
+                                <Table.HeaderCell>Email</Table.HeaderCell>
                                 <Table.HeaderCell>Szczegóły</Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
@@ -92,6 +107,9 @@ class PatientsPartial extends React.Component {
                                             {p.lastName}
                                         </Table.Cell>
                                         <Table.Cell>
+                                            {p.email}
+                                        </Table.Cell>
+                                        <Table.Cell>
                                             {p.id}
                                         </Table.Cell>
                                     </Table.Row>) 
@@ -101,19 +119,10 @@ class PatientsPartial extends React.Component {
                         </Table.Body>
                         <Table.Footer>
                             <Table.Row>
-                                <Table.HeaderCell colSpan='3'>
-                                    <Menu floated='right' pagination>
-                                        <Menu.Item as='a' icon>
-                                            <Icon name='chevron left' />
-                                        </Menu.Item>
-                                        <Menu.Item as='a'>1</Menu.Item>
-                                        <Menu.Item as='a'>2</Menu.Item>
-                                        <Menu.Item as='a'>3</Menu.Item>
-                                        <Menu.Item as='a'>4</Menu.Item>
-                                        <Menu.Item as='a' icon>
-                                            <Icon name='chevron right' />
-                                        </Menu.Item>
-                                    </Menu>
+                                <Table.HeaderCell colSpan='4'>
+                                    {!this.isEmpty(this.props.patients) &&
+                                    <PaginationPartial pagination={this.props.pagination} onPageChange={this.onPageChange} />
+                                    }
                                 </Table.HeaderCell>
                             </Table.Row>
                         </Table.Footer>
@@ -129,7 +138,15 @@ class PatientsPartial extends React.Component {
 
 PatientsPartial.propTypes = {
     patients: PropTypes.isRequired,
-    getPatientsInfo: PropTypes.func.isRequired
+    getPatientsInfo: PropTypes.func.isRequired,
+    pagination:PropTypes.shape({
+        currentPage: PropTypes.number.isRequired,
+        totalPages: PropTypes.number.isRequired,
+        pageSize: PropTypes.number.isRequired,
+        totalCount: PropTypes.number.isRequired,
+        hasPrevious: PropTypes.bool.isRequired,
+        hasNext: PropTypes.bool.isRequired
+    }).isRequired
 }
 
 const mapStateToPros = (state) =>
