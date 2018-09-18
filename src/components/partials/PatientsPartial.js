@@ -11,9 +11,9 @@ class PatientsPartial extends React.Component {
     state = {
         queryLastName:"",
         queryPage:1,
-        queryPageSize:1,
-        loading: false
-
+        queryPageSize:10,
+        loading: false,
+        activeElement:"displayPatients"
     }
     
     componentDidMount()
@@ -29,10 +29,13 @@ class PatientsPartial extends React.Component {
     }
 
     onPageChange = (e, { activePage })=>{
-        this.setState({queryPage: activePage});
-        this.fetchPatients();
-        };
+        this.setState({queryPage: activePage}, ()=>{this.fetchPatients();});
+    };
 
+    setPageSize = (e) => {
+        this.setState({queryPageSize:parseInt(e.target.innerHTML, 10)}, ()=>{this.fetchPatients();});
+        
+    };
 
     fetchPatients = () =>
     {
@@ -53,13 +56,22 @@ class PatientsPartial extends React.Component {
     }
 
     isEmpty = (obj) => {
-        for(var key in obj) {
+        for(const key in obj) {
             if(obj.hasOwnProperty(key))
                 return false;
         }
         return true;
     }
 
+    showPatients = () =>
+    {
+        this.setState({activeElement:"displayPatients"});
+    }
+
+    addPatient = () =>
+    {
+        this.setState({activeElement:"addPatient"});
+    }
 
     render() {
         return (
@@ -67,18 +79,22 @@ class PatientsPartial extends React.Component {
                 <Header as='h3' dividing>Pacjenci</Header>
 
                 <Menu pointing >
-                    <Menu.Item as="a" active><Icon name="users" />Przeglądaj pacjentów</Menu.Item>
-                    <Menu.Item as="a"><Icon name="plus" />Dodaj pacjenta</Menu.Item>
+                    <Menu.Item as="a" active={this.state.activeElement==="displayPatients"} onClick={this.showPatients}><Icon name="users" />Przeglądaj pacjentów</Menu.Item>
+                    <Menu.Item as="a" active={this.state.activeElement==="addPatient"} onClick={this.addPatient}><Icon name="plus" />Dodaj pacjenta</Menu.Item>
                     <Menu.Item as="a"><Icon name="user outline" />Aktualizuj dane pacjenta</Menu.Item>
 
+                    {this.state.activeElement==="displayPatients" &&
                     <Menu.Menu position='right'>
                         <Menu.Item>
-                            <Input icon='search' onChange={this.onSearchChange} placeholder='Szukaj...' />
+                            <Input icon='search' onChange={this.onSearchChange} value={this.state.queryLastName} placeholder='Szukaj...' />
                         </Menu.Item>
                     </Menu.Menu>
+                    }
                 </Menu>
 
-                <Segment>
+
+                {this.state.activeElement==="displayPatients" &&
+                <Segment className="displayPatients">
                     {this.state.loading &&
                     <Dimmer active inverted>
                         <Loader size='large'>Pobieranie danych...</Loader>
@@ -120,6 +136,11 @@ class PatientsPartial extends React.Component {
                         <Table.Footer>
                             <Table.Row>
                                 <Table.HeaderCell colSpan='4'>
+                                    <Menu compact>
+                                        <Menu.Item active={this.state.queryPageSize===10} onClick={this.setPageSize}>10</Menu.Item>
+                                        <Menu.Item active={this.state.queryPageSize===30} onClick={this.setPageSize}>30</Menu.Item>
+                                        <Menu.Item active={this.state.queryPageSize===50} onClick={this.setPageSize}>50</Menu.Item>
+                                    </Menu>
                                     {!this.isEmpty(this.props.patients) &&
                                     <PaginationPartial pagination={this.props.pagination} onPageChange={this.onPageChange} />
                                     }
@@ -127,9 +148,13 @@ class PatientsPartial extends React.Component {
                             </Table.Row>
                         </Table.Footer>
                     </Table>
-                    
-
                 </Segment>
+                }
+                {this.state.activeElement==="addPatient" &&
+                    <Segment className="addPatient">
+                    aa
+                    </Segment>
+                }
             </Segment>
 
         )
