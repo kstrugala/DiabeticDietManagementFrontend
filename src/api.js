@@ -13,6 +13,7 @@ export default {
                 lastName:query.lastName,
                 pageSize: query.pageSize,
                 page: query.page
-            }}).then(res => res.data)
+            }}).then(res => res.data),
+        post: (patient) => axios.post('api/patients', {firstname:patient.firstname, lastname:patient.lastname, username:patient.username, email:patient.email, password:patient.password}).then(res=>res.data)
     }
 }

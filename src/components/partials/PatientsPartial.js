@@ -1,9 +1,10 @@
 import React from 'react'
-import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer } from 'semantic-ui-react';
+import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer, Message } from 'semantic-ui-react';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getPatientsInfo } from "../../actions/patients"
+import { getPatientsInfo, addPatient } from "../../actions/patients"
 import PaginationPartial from "./Pagination"
+import AddPatientForm from '../forms/AddPatientForm';
 
 
 class PatientsPartial extends React.Component {
@@ -13,7 +14,9 @@ class PatientsPartial extends React.Component {
         queryPage:1,
         queryPageSize:10,
         loading: false,
-        activeElement:"displayPatients"
+        activeElement:"displayPatients",
+        messagePatientAdded:false,
+        errors:{}
     }
     
     componentDidMount()
@@ -55,9 +58,9 @@ class PatientsPartial extends React.Component {
         this.props.getPatientsInfo(query).then(()=>{this.setState({loading:false})});
     }
 
-    isEmpty = (obj) => {
-        for(const key in obj) {
-            if(obj.hasOwnProperty(key))
+    isEmpty = (obj) => { // eslint-disable-next-line
+        for(const key in obj) { 
+            if(obj.hasOwnProperty(key)) // eslint-disable- line
                 return false;
         }
         return true;
@@ -65,12 +68,35 @@ class PatientsPartial extends React.Component {
 
     showPatients = () =>
     {
-        this.setState({activeElement:"displayPatients"});
+        if(this.state.messagePatientAdded)
+        {
+            this.fetchPatients();
+        }
+        this.setState({activeElement:"displayPatients", messagePatientAdded:false});
     }
 
     addPatient = () =>
     {
         this.setState({activeElement:"addPatient"});
+    }
+
+    addPatientSubmit = (patient) =>
+    {
+        this.setState({errors:{}});
+        this.props.addPatient(patient).then(()=>{
+            this.setState({messagePatientAdded:true});
+        }).catch(err=>{
+            switch(err.response.data.code){
+                case 'email_in_use':
+                    this.setState({errors:{emailInUse:"Adres email jest już zajęty"}});
+                    break;
+                case 'invalid_username':
+                    this.setState({errors:{invalidUsername:"Nieprawidłowa (lub zajęta) nazwa użytkownika"}});   
+                    break; 
+                default:
+                    return;
+            }
+        });
     }
 
     render() {
@@ -101,6 +127,7 @@ class PatientsPartial extends React.Component {
                     </Dimmer>
                     }
                     
+
                     <Table  celled>
                         <Table.Header>
                             <Table.Row>
@@ -152,7 +179,18 @@ class PatientsPartial extends React.Component {
                 }
                 {this.state.activeElement==="addPatient" &&
                     <Segment className="addPatient">
-                    aa
+                        {this.state.messagePatientAdded && 
+                            <Message info>
+                                Pacjent został dodany.
+                            </Message>
+                        }
+                        {!this.isEmpty(this.state.errors) &&
+                        <Message error>
+                            {this.state.errors.emailInUse}
+                            {this.state.errors.invalidUsername}
+                        </Message>
+                        }
+                        <AddPatientForm submit={this.addPatientSubmit}/>
                     </Segment>
                 }
             </Segment>
@@ -182,4 +220,4 @@ const mapStateToPros = (state) =>
 }
 
 
-export default connect(mapStateToPros, {getPatientsInfo})(PatientsPartial);
+export default connect(mapStateToPros, {getPatientsInfo, addPatient })(PatientsPartial);
