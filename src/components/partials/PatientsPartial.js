@@ -1,9 +1,10 @@
 import React from 'react'
-import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer, Message } from 'semantic-ui-react';
+import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer, Message, Button } from 'semantic-ui-react';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getPatientsInfo, addPatient } from "../../actions/patients"
+import { getPatientsInfo, addPatient, deletePatient } from "../../actions/patients"
 import PaginationPartial from "./Pagination"
+import PatientDetailsPartial from "./PatientDetailsPartial"
 import AddPatientForm from '../forms/AddPatientForm';
 
 
@@ -15,6 +16,7 @@ class PatientsPartial extends React.Component {
         queryPageSize:10,
         loading: false,
         activeElement:"displayPatients",
+        patientId:"",
         messagePatientAdded:false,
         errors:{}
     }
@@ -27,7 +29,7 @@ class PatientsPartial extends React.Component {
     onSearchChange = (e) =>
     {
         clearTimeout(this.timer);
-        this.setState({queryLastName:e.target.value})
+        this.setState({queryLastName:e.target.value, messagePatientDeleted:false})
         this.timer = setTimeout(this.fetchPatients, 1000);
     }
 
@@ -35,6 +37,7 @@ class PatientsPartial extends React.Component {
         this.setState({queryPage: activePage}, ()=>{this.fetchPatients();});
     };
 
+    
     setPageSize = (e) => {
         this.setState({queryPageSize:parseInt(e.target.innerHTML, 10)}, ()=>{this.fetchPatients();});
         
@@ -66,12 +69,10 @@ class PatientsPartial extends React.Component {
         return true;
     }
 
+
     showPatients = () =>
     {
-        if(this.state.messagePatientAdded)
-        {
-            this.fetchPatients();
-        }
+        this.fetchPatients();
         this.setState({activeElement:"displayPatients", messagePatientAdded:false});
     }
 
@@ -86,17 +87,23 @@ class PatientsPartial extends React.Component {
         this.props.addPatient(patient).then(()=>{
             this.setState({messagePatientAdded:true});
         }).catch(err=>{
-            switch(err.response.data.code){
-                case 'email_in_use':
-                    this.setState({errors:{emailInUse:"Adres email jest już zajęty"}});
-                    break;
-                case 'invalid_username':
-                    this.setState({errors:{invalidUsername:"Nieprawidłowa (lub zajęta) nazwa użytkownika"}});   
-                    break; 
-                default:
-                    return;
+            switch(err.response.data.code)
+            {
+            case 'email_in_use':
+                this.setState({errors:{emailInUse:"Adres email jest już zajęty"}});
+                break;
+            case 'invalid_username':
+                this.setState({errors:{invalidUsername:"Nieprawidłowa (lub zajęta) nazwa użytkownika"}});   
+                break; 
+            default:
+                            
             }
         });
+    }
+    
+    patientDetails = (id) =>
+    {
+        this.setState({activeElement:"patientDetails", patientId:id});
     }
 
     render() {
@@ -107,8 +114,9 @@ class PatientsPartial extends React.Component {
                 <Menu pointing >
                     <Menu.Item as="a" active={this.state.activeElement==="displayPatients"} onClick={this.showPatients}><Icon name="users" />Przeglądaj pacjentów</Menu.Item>
                     <Menu.Item as="a" active={this.state.activeElement==="addPatient"} onClick={this.addPatient}><Icon name="plus" />Dodaj pacjenta</Menu.Item>
-                    <Menu.Item as="a"><Icon name="user outline" />Aktualizuj dane pacjenta</Menu.Item>
-
+                    {this.state.activeElement==="patientDetails"  &&
+                    <Menu.Item as="a" active={this.state.activeElement==="patientDetails"}><Icon name="user outline" />Szczegóły pacjenta</Menu.Item>
+                    }
                     {this.state.activeElement==="displayPatients" &&
                     <Menu.Menu position='right'>
                         <Menu.Item>
@@ -127,14 +135,18 @@ class PatientsPartial extends React.Component {
                     </Dimmer>
                     }
                     
-
+                    {this.state.messagePatientDeleted &&
+                    <Message info>
+                        Pacjent został usunięty.
+                    </Message>
+                    }
                     <Table  celled>
                         <Table.Header>
                             <Table.Row>
                                 <Table.HeaderCell>Imię</Table.HeaderCell>
                                 <Table.HeaderCell>Nazwisko</Table.HeaderCell>
                                 <Table.HeaderCell>Email</Table.HeaderCell>
-                                <Table.HeaderCell>Szczegóły</Table.HeaderCell>
+                                <Table.HeaderCell></Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
 
@@ -152,8 +164,11 @@ class PatientsPartial extends React.Component {
                                         <Table.Cell>
                                             {p.email}
                                         </Table.Cell>
-                                        <Table.Cell>
-                                            {p.id}
+                                        <Table.Cell textAlign='center'>
+                                                                            
+                                            <Button onClick={()=>{this.patientDetails(p.id)}} color="green" icon><Icon name="book" /> <span>Szczegóły</span></Button>
+                                            
+                                                 
                                         </Table.Cell>
                                     </Table.Row>) 
                                 :null}
@@ -193,6 +208,11 @@ class PatientsPartial extends React.Component {
                         <AddPatientForm submit={this.addPatientSubmit}/>
                     </Segment>
                 }
+                {this.state.activeElement==="patientDetails" &&
+                <Segment>
+                    <PatientDetailsPartial PatientId={this.state.patientId} />
+                </Segment>
+                }
             </Segment>
 
         )
@@ -201,6 +221,7 @@ class PatientsPartial extends React.Component {
 
 PatientsPartial.propTypes = {
     patients: PropTypes.isRequired,
+    addPatient:PropTypes.func.isRequired,
     getPatientsInfo: PropTypes.func.isRequired,
     pagination:PropTypes.shape({
         currentPage: PropTypes.number.isRequired,
@@ -220,4 +241,4 @@ const mapStateToPros = (state) =>
 }
 
 
-export default connect(mapStateToPros, {getPatientsInfo, addPatient })(PatientsPartial);
+export default connect(mapStateToPros, {getPatientsInfo, addPatient, deletePatient })(PatientsPartial);

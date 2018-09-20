@@ -14,6 +14,8 @@ export default {
                 pageSize: query.pageSize,
                 page: query.page
             }}).then(res => res.data),
-        post: (patient) => axios.post('api/patients', {firstname:patient.firstname, lastname:patient.lastname, username:patient.username, email:patient.email, password:patient.password}).then(res=>res.data)
+        post: (patient) => axios.post('api/patients', {firstname:patient.firstname, lastname:patient.lastname, username:patient.username, email:patient.email, password:patient.password}).then(res=>res.data),
+        getPatient: (patientGuid) => axios.get(`api/patients/${patientGuid}`).then(res=>res.data),
+        delete: (patientGuid) => axios.delete(`api/patients/${patientGuid}`).then(res=>res.data)
     }
 }

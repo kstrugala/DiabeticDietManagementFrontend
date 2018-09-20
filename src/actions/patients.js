@@ -16,3 +16,9 @@ export const getPatientsInfo = query => dispatch =>
 
 export const addPatient = patient => dispatch =>
     api.patients.post(patient).then(patientAddData => dispatch(patientCreated(patientAddData)));
+
+export const deletePatient = patientGuid => dispatch =>
+    api.patients.delete(patientGuid);
+
+export const getPatient = patientGuid => dispatch =>
+    api.patients.getPatient(patientGuid);    
