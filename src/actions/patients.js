@@ -17,11 +17,14 @@ export const getPatientsInfo = query => dispatch =>
 export const addPatient = patient => dispatch =>
     api.patients.post(patient).then(patientAddData => dispatch(patientCreated(patientAddData)));
 
+// eslint-disable-next-line
 export const deletePatient = patientGuid => dispatch =>
     api.patients.delete(patientGuid);
 
+// eslint-disable-next-line
 export const getPatient = patientGuid => dispatch =>
     api.patients.getPatient(patientGuid);    
-    
+ 
+// eslint-disable-next-line    
 export const updatePatient = patient => dispatch =>
     api.patients.put(patient);    

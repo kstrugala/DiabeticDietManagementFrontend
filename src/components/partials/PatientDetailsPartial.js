@@ -65,7 +65,7 @@ class PatientDetailsPartial extends React.Component {
         this.props.updatePatient(patient)
             .then(()=>{
                 this.setState({patientUpdated:true, error:false});
-            }).catch(err=>{
+            }).catch(err=>{ // eslint-disable-line
                 this.getPatientData();
                 this.setState({error:true, patientUpdated:false});
             });

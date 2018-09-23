@@ -63,7 +63,7 @@ class PatientsPartial extends React.Component {
 
     isEmpty = (obj) => { // eslint-disable-next-line
         for(const key in obj) { 
-            if(obj.hasOwnProperty(key)) // eslint-disable- line
+            if(obj.hasOwnProperty(key)) // eslint-disable-line
                 return false;
         }
         return true;
