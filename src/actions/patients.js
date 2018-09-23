@@ -22,3 +22,6 @@ export const deletePatient = patientGuid => dispatch =>
 
 export const getPatient = patientGuid => dispatch =>
     api.patients.getPatient(patientGuid);    
+    
+export const updatePatient = patient => dispatch =>
+    api.patients.put(patient);    

@@ -146,7 +146,9 @@ class PatientsPartial extends React.Component {
                                 <Table.HeaderCell>Imię</Table.HeaderCell>
                                 <Table.HeaderCell>Nazwisko</Table.HeaderCell>
                                 <Table.HeaderCell>Email</Table.HeaderCell>
-                                <Table.HeaderCell></Table.HeaderCell>
+                                <Table.HeaderCell>
+                                    
+                                </Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
 
