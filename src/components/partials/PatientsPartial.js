@@ -154,7 +154,7 @@ class PatientsPartial extends React.Component {
 
                         <Table.Body>
 
-                            {typeof(this.props.patients)!=="undefined" ? 
+                            {typeof(this.props.patients)!=="undefined" && !this.isEmpty(this.props.patients) ? 
                                 this.props.patients.map(p=>
                                     <Table.Row key={p.id}>
                                         <Table.Cell>
@@ -235,9 +235,17 @@ PatientsPartial.propTypes = {
     }).isRequired
 }
 
+const isEmpty = (obj) => { // eslint-disable-next-line
+    for(const key in obj) { 
+        if(obj.hasOwnProperty(key)) // eslint-disable-line
+            return false;
+    }
+    return true;
+}
+
 const mapStateToPros = (state) =>
 {
-    if(typeof(state.patient) !=='undefined')
+    if(typeof(state.patient) !=='undefined' && !isEmpty(state.patient))
         return  { patients: state.patient.patients.results, pagination:state.patient.patients.pagination };
     return  { patients: {} };  
 }

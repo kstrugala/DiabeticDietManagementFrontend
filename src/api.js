@@ -18,5 +18,17 @@ export default {
         post: (patient) => axios.post('api/patients', {firstname:patient.firstname, lastname:patient.lastname, username:patient.username, email:patient.email, password:patient.password}).then(res=>res.data),
         put: (patient) => axios.put(`api/patients/${patient.id}`, {firstname:patient.firstname, lastname:patient.lastname, email:patient.email}).then(res=>res.data),
         delete: (patientGuid) => axios.delete(`api/patients/${patientGuid}`).then(res=>res.data)
+    },
+    receptionists: {
+        get: (query) => axios.get('api/receptionists', {
+            params:{
+                first:query.firstName,
+                lastName:query.lastName,
+                pageSize: query.pageSize,
+                page: query.page
+            }}).then(res => res.data),
+        getReceptionist: (receptionistGuid) => axios.get(`api/receptionists/${receptionistGuid}`).then(res=>res.data),
+        post: (receptionist) => axios.post('api/receptionists', {firstname:receptionist.firstname, lastname:receptionist.lastname, username:receptionist.username, email:receptionist.email, password:receptionist.password}).then(res=>res.data),
+        put: (receptionist) => axios.put(`api/receptionists/${receptionist.id}`, {firstname:receptionist.firstname, lastname:receptionist.lastname, email:receptionist.email}).then(res=>res.data),
     }
 }
