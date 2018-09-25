@@ -2,83 +2,83 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from "react-redux";
 import { Form, Button, Icon, Divider, Message } from 'semantic-ui-react';
-import { updateReceptionist } from "../../actions/receptionists"
+import { updateDoctor } from "../../actions/doctors"
 
 
-class ReceptionistDetailsPartial extends React.Component {
+class DoctorDetailsPartial extends React.Component {
     state = {
         id:'',
         firstName:'',
         lastName:'',
         email:'', 
-        updateReceptionist:false,
-        receptionistUpdated:false,
+        updateDoctor:false,
+        doctorUpdated:false,
         error:false
     }
     
     componentDidMount = () =>
     {
-        this.getReceptionistData();
+        this.getDoctorData();
     }
 
 
     onFirstNameChange = (e) => {
-        if(this.state.updateReceptionist)
+        if(this.state.updateDoctor)
         {
             this.setState({firstName: e.target.value});    
         }
     }
 
     onLastNameChange = (e) => {
-        if(this.state.updateReceptionist)
+        if(this.state.updateDoctor)
         {
             this.setState({lastName: e.target.value});    
         }
     }
 
     onEmailChange = (e) => {
-        if(this.state.updateReceptionist)
+        if(this.state.updateDoctor)
         {
             this.setState({email: e.target.value});    
         }
     }
 
-    getReceptionistData = () => {
-        const p = this.props.receptionists.find(x=>x.id === this.props.ReceptionistId);
-        this.setState({id: this.props.ReceptionistId, firstName:p.firstName, lastName:p.lastName, email:p.email});
+    getDoctorData = () => {
+        const p = this.props.doctors.find(x=>x.id === this.props.DoctorId);
+        this.setState({id: this.props.DoctorId, firstName:p.firstName, lastName:p.lastName, email:p.email});
     }
 
    
-    updateReceptionist = () =>{
-        this.setState({updateReceptionist:true});
+    updateDoctor = () =>{
+        this.setState({updateDoctor:true});
     }
 
     acceptUpdate = () =>{
-        const receptionist = {id: this.state.id, firstname:this.state.firstName, lastname:this.state.lastName, email:this.state.email};
-        this.props.updateReceptionist(receptionist)
+        const doctor = {id: this.state.id, firstname:this.state.firstName, lastname:this.state.lastName, email:this.state.email};
+        this.props.updateDoctor(doctor)
             .then(()=>{
-                this.setState({receptionistUpdated:true, error:false});
+                this.setState({doctorUpdated:true, error:false});
             }).catch(err=>{ // eslint-disable-line
-                this.getReceptionistData();
-                this.setState({error:true, receptionistUpdated:false});
+                this.getDoctorData();
+                this.setState({error:true, doctorUpdated:false});
             });
-        this.setState({updateReceptionist:false});
+        this.setState({updateDoctor:false});
     }
 
     cancelUpdate = () => {
-        this.getReceptionistData();
-        this.setState({updateReceptionist:false});
+        this.getDoctorData();
+        this.setState({updateDoctor:false});
     }
    
 
     render() {
         return (
             <div>
-                {this.state.updateReceptionist &&
-                <Message warning>Edytowanie rejstratora</Message>
+                {this.state.updateDoctor &&
+                <Message warning>Edytowanie lekarza</Message>
                 }
-                {this.state.receptionistUpdated &&
-                <Message success>Dane rejestratora zostały zaktualizowane</Message>
+                {this.state.doctorUpdated &&
+                <Message success>Dane lekarza zostały zaktualizowane</Message>
                 }
                 {this.state.error &&
                 <Message error>Podczas aktualizacji wystąpił błąd. Spróbuj ponownie.</Message>
@@ -106,13 +106,13 @@ class ReceptionistDetailsPartial extends React.Component {
                 </Form>
                 
                 <Divider />
-                {!this.state.updateReceptionist &&
+                {!this.state.updateDoctor &&
                 <div>
-                    <Button onClick={this.updateReceptionist} color="orange" icon><Icon name="refresh" /><span>Edytuj</span></Button>  
+                    <Button onClick={this.updateDoctor} color="orange" icon><Icon name="refresh" /><span>Edytuj</span></Button>  
                 </div>
                 }
                 
-                {this.state.updateReceptionist && 
+                {this.state.updateDoctor && 
                     <div>
                         <Button onClick={this.acceptUpdate} color="green" icon><Icon name="save" /><span>Zatwierdź</span></Button>
                         <Button onClick={this.cancelUpdate} color="red">Anuluj</Button> 
@@ -125,18 +125,18 @@ class ReceptionistDetailsPartial extends React.Component {
 }        
 
 
-ReceptionistDetailsPartial.propTypes = {
-    receptionists: PropTypes.isRequired,
-    updateReceptionist: PropTypes.func.isRequired,
-    ReceptionistId: PropTypes.string.isRequired
+DoctorDetailsPartial.propTypes = {
+    doctors: PropTypes.isRequired,
+    updateDoctor: PropTypes.func.isRequired,
+    DoctorId: PropTypes.string.isRequired
 };
 
 const mapStateToPros = (state) =>
 {
-    if(typeof(state.receptionist) !=='undefined')
-        return  { receptionists: state.receptionist.receptionists.results, pagination:state.receptionist.receptionists.pagination };
-    return  { receptionists: {} };  
+    if(typeof(state.doctor) !=='undefined')
+        return  { doctors: state.doctor.doctors.results, pagination:state.doctor.doctors.pagination };
+    return  { doctors: {} };  
 }
 
 
-export default connect(mapStateToPros, {updateReceptionist})(ReceptionistDetailsPartial);
+export default connect(mapStateToPros, {updateDoctor})(DoctorDetailsPartial);

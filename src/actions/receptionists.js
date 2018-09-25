@@ -20,7 +20,7 @@ export const addReceptionist = receptionist => dispatch =>
 
 // eslint-disable-next-line
 export const getReceptionist = receptionistGuid => dispatch =>
-    api.receptionists.getPatient(receptionistGuid);    
+    api.receptionists.getReceptionist(receptionistGuid);    
  
 // eslint-disable-next-line    
 export const updateReceptionist = receptionist => dispatch =>
