@@ -57,7 +57,7 @@ class ReceptionistPage extends React.Component {
                 </Menu>
 
                 <Container style={{ marginTop: "4em", background: "rgb(255, 255, 255)", boxShadow: "rgb(204, 204, 204) 0px 1px 2px" }}>
-                    {showPatients ? <PatientsPartial /> : null}
+                    {showPatients ? <PatientsPartial userRole="receptionist" /> : null}
                 </Container>
             </div>
         );

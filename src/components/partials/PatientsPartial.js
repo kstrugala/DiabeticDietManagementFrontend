@@ -113,7 +113,10 @@ class PatientsPartial extends React.Component {
 
                 <Menu pointing >
                     <Menu.Item as="a" active={this.state.activeElement==="displayPatients"} onClick={this.showPatients}><Icon name="users" />Przeglądaj pacjentów</Menu.Item>
+                    
+                    {(this.props.userRole === "admin" || this.props.userRole === "receptionist") &&
                     <Menu.Item as="a" active={this.state.activeElement==="addPatient"} onClick={this.addPatient}><Icon name="plus" />Dodaj pacjenta</Menu.Item>
+                    }
                     {this.state.activeElement==="patientDetails"  &&
                     <Menu.Item as="a" active={this.state.activeElement==="patientDetails"}><Icon name="user outline" />Szczegóły pacjenta</Menu.Item>
                     }
@@ -212,7 +215,7 @@ class PatientsPartial extends React.Component {
                 }
                 {this.state.activeElement==="patientDetails" &&
                 <Segment>
-                    <PatientDetailsPartial PatientId={this.state.patientId} />
+                    <PatientDetailsPartial userRole={this.props.userRole} PatientId={this.state.patientId} />
                 </Segment>
                 }
             </Segment>
@@ -222,6 +225,7 @@ class PatientsPartial extends React.Component {
 }
 
 PatientsPartial.propTypes = {
+    userRole: PropTypes.string.isRequired,
     patients: PropTypes.isRequired,
     addPatient:PropTypes.func.isRequired,
     getPatientsInfo: PropTypes.func.isRequired,

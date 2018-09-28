@@ -119,9 +119,8 @@ class PatientDetailsPartial extends React.Component {
                 {!this.state.patientDeleted &&    
                 <Divider />
                 }
-                {!this.state.patientDeleted && !this.state.updatePatient &&
+                {!this.state.patientDeleted && !this.state.updatePatient && (this.props.userRole === "admin" || this.props.userRole === "receptionist") &&
                 <div>
-                    
                     <Button onClick={this.updatePatient} color="orange" icon><Icon name="refresh" /><span>Edytuj</span></Button>  
                     <Button onClick={this.deletePatient} color="red" icon><Icon name="delete" /><span>Usuń</span></Button> 
                 </div>
@@ -132,7 +131,11 @@ class PatientDetailsPartial extends React.Component {
                         <Button onClick={this.cancelUpdate} color="red">Anuluj</Button> 
                     </div>   
                 }
-
+                {this.props.userRole === "doctor" &&
+                    <div>
+                        <Button color="blue" icon><Icon name="clipboard list" /><span>Jadłospis</span></Button>
+                    </div>    
+                }
             </div>
         )
     }
@@ -140,6 +143,7 @@ class PatientDetailsPartial extends React.Component {
 
 
 PatientDetailsPartial.propTypes = {
+    userRole: PropTypes.string.isRequired,
     patients: PropTypes.isRequired,
     deletePatient: PropTypes.func.isRequired,
     updatePatient: PropTypes.func.isRequired,

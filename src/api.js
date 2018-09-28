@@ -42,5 +42,8 @@ export default {
         getDoctor: (doctorGuid) => axios.get(`api/doctors/${doctorGuid}`).then(res=>res.data),
         post: (doctor) => axios.post('api/doctors', {firstname:doctor.firstname, lastname:doctor.lastname, username:doctor.username, email:doctor.email, password:doctor.password}).then(res=>res.data),
         put: (doctor) => axios.put(`api/doctors/${doctor.id}`, {firstname:doctor.firstname, lastname:doctor.lastname, email:doctor.email}).then(res=>res.data),
+    },
+    plan: {
+        get: (patientId) => axios.get(`api/patients/${patientId}/recommendedmealplan`).then(res=>res.data)
     }
 }
