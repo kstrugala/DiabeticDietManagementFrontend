@@ -1,6 +1,6 @@
 import { GET_DOCTORS, USER_LOGGED_OUT } from "../types";
 
-export default function receptionist(state = {}, action = {}) {
+export default function doctor(state = {}, action = {}) {
     switch (action.type) {
     case GET_DOCTORS:
         return {...state, doctors: action.doctors}

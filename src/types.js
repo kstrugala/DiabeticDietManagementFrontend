@@ -9,3 +9,5 @@ export const RECEPTIONIST_ADDED = "RECEPTIONIST_ADDED";
 
 export const GET_DOCTORS = "GET_DOCTORS";
 export const DOCTOR_ADDED = "DOCTOR_ADDED";
+
+export const GET_PLAN = "GET_PLAN";

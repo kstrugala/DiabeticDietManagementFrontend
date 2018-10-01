@@ -1,12 +1,12 @@
 import React from 'react'
-import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer, Message, Button } from 'semantic-ui-react';
+import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer, Message, Button, Divider } from 'semantic-ui-react';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getPatientsInfo, addPatient, deletePatient } from "../../actions/patients"
 import PaginationPartial from "./Pagination"
 import PatientDetailsPartial from "./PatientDetailsPartial"
-import AddPatientForm from '../forms/AddPatientForm';
-
+import AddPatientForm from '../forms/AddPatientForm'
+import MealPlanPartial from './MealPlanPartial'
 
 class PatientsPartial extends React.Component {
 
@@ -106,6 +106,13 @@ class PatientsPartial extends React.Component {
         this.setState({activeElement:"patientDetails", patientId:id});
     }
 
+    showMealPlan = () =>
+    {
+        this.setState({activeElement:"mealPlan"});
+    }    
+
+
+
     render() {
         return (
             <Segment>
@@ -119,6 +126,14 @@ class PatientsPartial extends React.Component {
                     }
                     {this.state.activeElement==="patientDetails"  &&
                     <Menu.Item as="a" active={this.state.activeElement==="patientDetails"}><Icon name="user outline" />Szczegóły pacjenta</Menu.Item>
+                    }
+                    {this.state.activeElement==="mealPlan"  &&
+                    <Menu.Item as="a" active={this.state.activeElement==="patientDetails"}><Icon name="user outline" />Szczegóły pacjenta</Menu.Item>
+                    }
+                    {this.state.activeElement==="mealPlan"  &&
+                    <div>
+                        <Menu.Item as="a" active={this.state.activeElement==="mealPlan"}><Icon name="clipboard list" />Jadłospis</Menu.Item>
+                    </div>
                     }
                     {this.state.activeElement==="displayPatients" &&
                     <Menu.Menu position='right'>
@@ -216,6 +231,21 @@ class PatientsPartial extends React.Component {
                 {this.state.activeElement==="patientDetails" &&
                 <Segment>
                     <PatientDetailsPartial userRole={this.props.userRole} PatientId={this.state.patientId} />
+                    {this.props.userRole === "doctor" &&
+                        <Button onClick={this.showMealPlan} color="blue" icon><Icon name="clipboard list" /><span>Jadłospis</span></Button>
+                    }
+
+                </Segment>
+                }
+
+                {this.state.activeElement==="mealPlan" &&
+                <Segment>
+                    <Header as='h4' dividing>Jadłospis</Header>
+                    
+                    <MealPlanPartial patientId={this.state.patientId}/>
+
+                    <Divider />
+                    <Button onClick={()=>{this.patientDetails(this.state.patientId)}} color="teal" icon><Icon name="backward" /><span>Powrót</span></Button>
                 </Segment>
                 }
             </Segment>

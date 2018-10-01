@@ -131,11 +131,7 @@ class PatientDetailsPartial extends React.Component {
                         <Button onClick={this.cancelUpdate} color="red">Anuluj</Button> 
                     </div>   
                 }
-                {this.props.userRole === "doctor" &&
-                    <div>
-                        <Button color="blue" icon><Icon name="clipboard list" /><span>Jadłospis</span></Button>
-                    </div>    
-                }
+               
             </div>
         )
     }
