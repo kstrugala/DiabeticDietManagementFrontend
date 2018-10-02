@@ -4,7 +4,7 @@ import {Card, Segment, Table} from 'semantic-ui-react'
 
 const DailyPlanPartial  = (props) => (
 
-    <Segment>
+    <Segment attached>
         <Card fluid color='green' >
             <Card.Content header='Śniadanie' />
             <Card.Content>
