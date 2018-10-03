@@ -44,6 +44,11 @@ export default {
         put: (doctor) => axios.put(`api/doctors/${doctor.id}`, {firstname:doctor.firstname, lastname:doctor.lastname, email:doctor.email}).then(res=>res.data),
     },
     plan: {
-        get: (patientId) => axios.get(`api/patients/${patientId}/recommendedmealplan`).then(res=>res.data)
+        get: (patientId) => axios.get(`api/patients/${patientId}/recommendedmealplan`).then(res=>res.data),
+        getForEdition: (patientId) => axios.get(`api/patients/${patientId}/recommendedmealplan?versionForEdition=true`).then(res=>res.data)
+
+    },
+    products: {
+        getProduct: (productId) => axios.get(`api/products/${productId}`).then(res=>res.data),
     }
 }

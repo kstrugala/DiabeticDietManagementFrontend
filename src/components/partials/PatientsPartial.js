@@ -7,6 +7,7 @@ import PaginationPartial from "./Pagination"
 import PatientDetailsPartial from "./PatientDetailsPartial"
 import AddPatientForm from '../forms/AddPatientForm'
 import MealPlanPartial from './MealPlanPartial'
+import MealPlanEditorPartial from './MealPlanEditorPartial'
 
 class PatientsPartial extends React.Component {
 
@@ -111,7 +112,10 @@ class PatientsPartial extends React.Component {
         this.setState({activeElement:"mealPlan"});
     }    
 
-
+    showMealPlanEditor = () =>
+    {
+        this.setState({activeElement:"mealPlanEditor"});
+    }
 
     render() {
         return (
@@ -130,9 +134,17 @@ class PatientsPartial extends React.Component {
                     {this.state.activeElement==="mealPlan"  &&
                     <Menu.Item as="a" active={this.state.activeElement==="patientDetails"}><Icon name="user outline" />Szczegóły pacjenta</Menu.Item>
                     }
+                    {this.state.activeElement==="mealPlanEditor"  &&
+                    <Menu.Item as="a" active={this.state.activeElement==="patientDetails"}><Icon name="user outline" />Szczegóły pacjenta</Menu.Item>
+                    }
                     {this.state.activeElement==="mealPlan"  &&
                     <div>
                         <Menu.Item as="a" active={this.state.activeElement==="mealPlan"}><Icon name="clipboard list" />Jadłospis</Menu.Item>
+                    </div>
+                    }
+                    {this.state.activeElement==="mealPlanEditor"  &&
+                    <div>
+                        <Menu.Item as="a" active={this.state.activeElement==="mealPlan"}><Icon name="clipboard list" />Edytor jadłospisu</Menu.Item>
                     </div>
                     }
                     {this.state.activeElement==="displayPatients" &&
@@ -232,7 +244,10 @@ class PatientsPartial extends React.Component {
                 <Segment>
                     <PatientDetailsPartial userRole={this.props.userRole} PatientId={this.state.patientId} />
                     {this.props.userRole === "doctor" &&
+                    <div>
                         <Button onClick={this.showMealPlan} color="blue" icon><Icon name="clipboard list" /><span>Jadłospis</span></Button>
+                        <Button onClick={this.showMealPlanEditor} color="teal" icon><Icon name="clipboard check" /><span>Edytuj jadłospis</span></Button>
+                    </div>
                     }
 
                 </Segment>
@@ -248,6 +263,18 @@ class PatientsPartial extends React.Component {
                     <Button onClick={()=>{this.patientDetails(this.state.patientId)}} color="teal" icon><Icon name="backward" /><span>Powrót</span></Button>
                 </Segment>
                 }
+
+                {this.state.activeElement==="mealPlanEditor" &&
+                <Segment>
+                    <Header as='h4' dividing>Edytor jadłospisu</Header>
+                    
+                    <MealPlanEditorPartial patientId={this.state.patientId}/>
+
+                    <Divider />
+                    <Button onClick={()=>{this.patientDetails(this.state.patientId)}} color="red" icon><Icon name="cancel" /><span>Anuluj</span></Button>
+                </Segment>
+                }
+
             </Segment>
 
         )

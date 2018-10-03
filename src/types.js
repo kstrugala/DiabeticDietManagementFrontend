@@ -11,3 +11,4 @@ export const GET_DOCTORS = "GET_DOCTORS";
 export const DOCTOR_ADDED = "DOCTOR_ADDED";
 
 export const GET_PLAN = "GET_PLAN";
+export const GET_PLAN_FOR_EDITION = "GET_PLAN_FOR_EDITION";
