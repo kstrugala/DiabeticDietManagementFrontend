@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 import {getMealPlanForEdition} from '../../actions/mealPlan'
 import {getProduct} from '../../actions/products'
 import ButtonsForDaysPartial from './ButtonsForDaysPartial'
+import SingleMealEditor from './SingleMealEditor';
 
 class MealPlanEditorPartial extends React.Component {
 
@@ -15,7 +16,7 @@ class MealPlanEditorPartial extends React.Component {
         dailyPlans: [],
         completeDays: [],
         day: 1,
-        breakfast: {}
+        breakfast: []
     }
 
     componentDidMount() {
@@ -105,7 +106,7 @@ class MealPlanEditorPartial extends React.Component {
                             <Segment attached>
                                 <Header as='h5' attached='top'>Śniadanie</Header> 
                                 <Segment attached>
-                                    a
+                                    <SingleMealEditor meal={this.state.breakfast} />
                                 </Segment>
                                 <Header as='h5' attached='top'>Drugie śniadanie</Header> 
                                 <Segment attached>
