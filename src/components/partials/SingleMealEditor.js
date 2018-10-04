@@ -33,7 +33,7 @@ class SingleMealEditor extends React.Component {
                     </Table.Header>
 
                     <Table.Body>
-                        {this.props.meal.map(product => (
+                        {this.props.meal.dailyPlans.find(x=>x.day===this.props.day).breakfast.products.map(product => (
                             <Table.Row key={`${product.productId}#${product.quantity}`}>
                                 <Table.Cell>{product.productId}</Table.Cell>
                                 <Table.Cell>{product.productId}</Table.Cell>

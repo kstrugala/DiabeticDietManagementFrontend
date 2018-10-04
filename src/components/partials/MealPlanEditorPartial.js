@@ -91,7 +91,7 @@ class MealPlanEditorPartial extends React.Component {
                                 <Segment attached>
                                     <Header as='h5' attached='top'>Śniadanie</Header> 
                                     <Segment attached>
-                                        <SingleMealEditor meal={this.props.mealPlan.dailyPlans.find(x=>x.day===this.state.day).breakfast.products} delete={this.deleteFromBreakfast} />
+                                        <SingleMealEditor meal={this.props.mealPlan} day={this.state.day} delete={this.deleteFromBreakfast} />
                                     </Segment>
                                     <Header as='h5' attached='top'>Drugie śniadanie</Header> 
                                     <Segment attached>
