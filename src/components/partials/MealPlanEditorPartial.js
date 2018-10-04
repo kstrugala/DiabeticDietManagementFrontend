@@ -1,11 +1,20 @@
 import React from 'react'
-import { Segment, Grid, Header, Dimmer, Loader, Form } from 'semantic-ui-react'
+import { Segment, Grid, Header, Dimmer, Loader, Form, Message } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import {getMealPlanForEdition} from '../../actions/mealPlan'
 import {getProduct} from '../../actions/products'
 import ButtonsForDaysPartial from './ButtonsForDaysPartial'
 import SingleMealEditor from './SingleMealEditor';
+
+const isEmpty = (obj) => { // eslint-disable-next-line
+    for(const key in obj) { 
+        if(obj.hasOwnProperty(key)) // eslint-disable-line
+            return false;
+    }
+    return true;
+}
+
 
 class MealPlanEditorPartial extends React.Component {
 
@@ -16,12 +25,16 @@ class MealPlanEditorPartial extends React.Component {
         dailyPlans: [],
         completeDays: [],
         day: 1,
-        breakfast: []
+        dayChosen: false,
+        breakfast: [],
+        snap: [],
+        lunch: [],
+        dinner: [],
+        supper: []
     }
 
     componentDidMount() {
         this.fetchPlanForEdition();
-
     }
 
     setCompletedDays = () => {
@@ -34,7 +47,14 @@ class MealPlanEditorPartial extends React.Component {
     }
 
     setDay = (d) => {
-        this.setState({day: d})
+        if(this.state.isFetched===true)
+        {
+            this.setState({day: d, dayChosen: true}, ()=>{
+                this.setCompletedDays();
+                this.processDailyMeal();
+            });
+            
+        }
     }
 
     fetchPlanForEdition = () =>
@@ -44,7 +64,6 @@ class MealPlanEditorPartial extends React.Component {
         this.props.getMealPlanForEdition(this.props.patientId).then(()=>{
             this.setState({fetching: false, isFetched:true, name: this.props.mealPlan.name, dailyPlans:this.props.mealPlan.dailyPlans}, ()=>{
                 this.setCompletedDays();
-                this.processDailyMeal();
             });
             
         });
@@ -55,12 +74,24 @@ class MealPlanEditorPartial extends React.Component {
         this.setState({name: e.target.value})
     }
 
+    deleteFromBreakfast = (key) =>
+    {
+        const bf = this.state.breakfast;
+        bf.splice(key, 1);
+        this.setState({breakfast:bf});
+    }
+
     processDailyMeal = () =>
     {
         const dailyPlan = this.state.dailyPlans.find(x=>x.day===this.state.day);
-        if(dailyPlan !== 'undefined')
+        if(dailyPlan !== 'undefined' && !isEmpty(dailyPlan))
         {
-            this.processBreakfast(dailyPlan.breakfast)
+            this.processBreakfast(dailyPlan.breakfast);
+            this.processSnap(dailyPlan.snap);
+            this.processLunch(dailyPlan.lunch);
+            this.processDinner(dailyPlan.dinner);
+            this.processSupper(dailyPlan.supper);
+
         }
     }
 
@@ -78,7 +109,76 @@ class MealPlanEditorPartial extends React.Component {
                 bf.push(prodInfo);
             })
         }
-        this.setState({breakfast: bf});
+        this.setState({breakfast: bf}, ()=>{this.forceUpdate();});
+        
+    }
+
+    processSnap = (snap) =>
+    {
+        const sn = [];   
+        for(let i=0; i < snap.products.length; i+=1)
+        {
+            this.props.getProduct(snap.products[i].productId).then((data)=>{
+                const prodInfo = {productId: snap.products[i].productId, 
+                    quantity: snap.products[i].quantity, productName: data.productName,
+                    carbohydrates: data.carbohydrates, glycemicIndex: data.glycemicIndex,
+                    glycemicLoad: data.glycemicLoad, serveSize: data.serveSize
+                }
+                sn.push(prodInfo);
+            })
+        }
+        this.setState({snap: sn});
+    }
+
+    processLunch = (lunch) =>
+    {
+        const lc = [];   
+        for(let i=0; i < lunch.products.length; i+=1)
+        {
+            this.props.getProduct(lunch.products[i].productId).then((data)=>{
+                const prodInfo = {productId: lunch.products[i].productId, 
+                    quantity: lunch.products[i].quantity, productName: data.productName,
+                    carbohydrates: data.carbohydrates, glycemicIndex: data.glycemicIndex,
+                    glycemicLoad: data.glycemicLoad, serveSize: data.serveSize
+                }
+                lc.push(prodInfo);
+            })
+        }
+        this.setState({lunch: lc});
+    }
+
+    processDinner = (dinner) =>
+    {
+        const dn = [];   
+        for(let i=0; i < dinner.products.length; i+=1)
+        {
+            this.props.getProduct(dinner.products[i].productId).then((data)=>{
+                const prodInfo = {productId: dinner.products[i].productId, 
+                    quantity: dinner.products[i].quantity, productName: data.productName,
+                    carbohydrates: data.carbohydrates, glycemicIndex: data.glycemicIndex,
+                    glycemicLoad: data.glycemicLoad, serveSize: data.serveSize
+                }
+                dn.push(prodInfo);
+            })
+        }
+        this.setState({dinner: dn});
+    }
+
+    processSupper = (supper) =>
+    {
+        const sp = [];   
+        for(let i=0; i < supper.products.length; i+=1)
+        {
+            this.props.getProduct(supper.products[i].productId).then((data)=>{
+                const prodInfo = {productId: supper.products[i].productId, 
+                    quantity: supper.products[i].quantity, productName: data.productName,
+                    carbohydrates: data.carbohydrates, glycemicIndex: data.glycemicIndex,
+                    glycemicLoad: data.glycemicLoad, serveSize: data.serveSize
+                }
+                sp.push(prodInfo);
+            })
+        }
+        this.setState({supper: sp});
     }
 
     render() {
@@ -91,7 +191,7 @@ class MealPlanEditorPartial extends React.Component {
                     <Grid.Column width={1}>
                         <ButtonsForDaysPartial completeDays={this.state.completeDays} setDay={this.setDay} currentlyEditedDay={this.state.day} />
                     </Grid.Column>
-                    {this.state.isFetched===true &&
+                    {this.state.isFetched===true  &&
                     <Grid.Column width={15}>
                         <Form>
                             <Form.Input 
@@ -102,29 +202,39 @@ class MealPlanEditorPartial extends React.Component {
                             />
                         </Form>
                         <Segment>
+                            {!this.state.dayChosen && 
+                                <Message info>Proszę wybrać dzień do edycji</Message>
+                            }
+                            {this.state.dayChosen===true &&     
+                        <div>
                             <Header as='h4' attached='top'>Edytujesz jadłospis na dzień: {this.state.day}</Header> 
                             <Segment attached>
                                 <Header as='h5' attached='top'>Śniadanie</Header> 
                                 <Segment attached>
-                                    <SingleMealEditor meal={this.state.breakfast} />
+                                    <SingleMealEditor meal={this.state.breakfast} delete={this.deleteFromBreakfast} />
                                 </Segment>
                                 <Header as='h5' attached='top'>Drugie śniadanie</Header> 
                                 <Segment attached>
-                                    a
+                                    <SingleMealEditor meal={this.state.snap} />
                                 </Segment>
                                 <Header as='h5' attached='top'>Obiad</Header> 
                                 <Segment attached>
-                                    a
+                                    <SingleMealEditor meal={this.state.lunch} />
+
                                 </Segment>
                                 <Header as='h5' attached='top'>Podwieczorek</Header> 
                                 <Segment attached>
-                                    a
+                                    <SingleMealEditor meal={this.state.dinner} />
+
                                 </Segment>
                                 <Header as='h5' attached='top'>Kolacja</Header> 
                                 <Segment attached>
-                                    a
+                                    <SingleMealEditor meal={this.state.supper} />
+
                                 </Segment>
                             </Segment>
+                        </div>
+                            }
                         </Segment>
                     </Grid.Column>
                     }
@@ -146,13 +256,6 @@ MealPlanEditorPartial.propTypes = {
     }).isRequired
 }
 
-const isEmpty = (obj) => { // eslint-disable-next-line
-    for(const key in obj) { 
-        if(obj.hasOwnProperty(key)) // eslint-disable-line
-            return false;
-    }
-    return true;
-}
 
 
 const mapStateToPros = (state) =>
