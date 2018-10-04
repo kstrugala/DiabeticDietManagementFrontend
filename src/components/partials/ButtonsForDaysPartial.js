@@ -8,7 +8,7 @@ const ButtonsForDaysPartial = (props) => {
     if(props.completeDays.length === 31) // eslint-disable-line
     {
         dayButtons = _.times(31, i => (
-            <Button active={props.currentlyEditedDay===i+1}  negative={!props.completeDays[i]} positive={props.completeDays[i]} onClick={()=>{props.setDay(i+1)}}>{i+1}</Button>
+            <Button key={i} active={props.currentlyEditedDay===i+1}  negative={!props.completeDays[i]} positive={props.completeDays[i]} onClick={()=>{props.setDay(i+1)}}>{i+1}</Button>
         ));
     }
     return (

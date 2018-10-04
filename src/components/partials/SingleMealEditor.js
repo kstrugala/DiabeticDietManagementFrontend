@@ -1,42 +1,67 @@
 import React from 'react';
+import PropTypes from 'prop-types'
+import {getProduct} from '../../actions/products'
+import { connect } from 'react-redux'
 import { Table, Button, Icon } from 'semantic-ui-react'
 
-const SingleMealEditor = (props) =>
-    (
-        <div>
-            <Table celled>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Nazwa</Table.HeaderCell>
-                        <Table.HeaderCell>Indeks glikemiczny (GI)</Table.HeaderCell>
-                        <Table.HeaderCell>Ładunek glikemiczny (GL)</Table.HeaderCell>
-                        <Table.HeaderCell>Węglowodany</Table.HeaderCell>
-                        <Table.HeaderCell>Wielkość porcji</Table.HeaderCell>
-                        <Table.HeaderCell>Ilość porcji</Table.HeaderCell>
-                        <Table.HeaderCell></Table.HeaderCell>
 
-                    </Table.Row>
-                </Table.Header>
 
-                <Table.Body>
-                    {props.meal.map((product, key)=>(
+class SingleMealEditor extends React.Component {
+  
+    
+    componentDidUpdate()
+    { 
+    }
 
+
+
+    render() {
+        return (
+            <div>
+                <Table celled>
+                    <Table.Header>
                         <Table.Row>
-                            <Table.Cell>{product.productName}</Table.Cell>
-                            <Table.Cell>{product.glycemicIndex}</Table.Cell>
-                            <Table.Cell>{product.glycemicLoad}</Table.Cell>
-                            <Table.Cell>{product.carbohydrates}</Table.Cell>
-                            <Table.Cell>{product.serveSize}</Table.Cell>
-                            <Table.Cell>{product.quantity}</Table.Cell>
-                            <Table.Cell><Button color='red' onClick={()=>{props.delete(key)}} icon><Icon name='delete' />Usuń</Button></Table.Cell>
+                            <Table.HeaderCell>Nazwa</Table.HeaderCell>
+                            <Table.HeaderCell>Indeks glikemiczny (GI)</Table.HeaderCell>
+                            <Table.HeaderCell>Ładunek glikemiczny (GL)</Table.HeaderCell>
+                            <Table.HeaderCell>Węglowodany</Table.HeaderCell>
+                            <Table.HeaderCell>Wielkość porcji</Table.HeaderCell>
+                            <Table.HeaderCell>Ilość porcji</Table.HeaderCell>
+                            <Table.HeaderCell></Table.HeaderCell>
+
                         </Table.Row>
-                    ))}
-                </Table.Body>
+                    </Table.Header>
 
-            </Table>
+                    <Table.Body>
+                        {this.props.meal.map(product => (
+                            <Table.Row key={`${product.productId}#${product.quantity}`}>
+                                <Table.Cell>{product.productId}</Table.Cell>
+                                <Table.Cell>{product.productId}</Table.Cell>
+                                <Table.Cell>{product.productId}</Table.Cell>
+                                <Table.Cell>{product.productId}</Table.Cell>
+                                <Table.Cell>{product.productId}</Table.Cell>
+ 
+                                <Table.Cell>{product.quantity}</Table.Cell>
+                                <Table.Cell><Button color='red' onClick={()=>{this.props.delete(product.productId, product.quantity) }} icon><Icon name='delete' />Usuń</Button></Table.Cell>
+                            </Table.Row>
+                            
+                        ))  
+                        }
+                    </Table.Body>
 
-            
-        </div>
-    );
+                </Table>
 
-export default SingleMealEditor;
+        
+            </div>
+        )
+    }
+}
+
+
+
+SingleMealEditor.propTypes = {
+    meal: PropTypes.array.isRequired,
+    delete: PropTypes.func.isRequired,
+    getProduct: PropTypes.func.isRequired
+}
+export default connect(null, {getProduct})(SingleMealEditor);
