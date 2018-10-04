@@ -9,7 +9,7 @@ import { Table, Button, Icon } from 'semantic-ui-react'
 class SingleMealEditor extends React.Component {
   
     
-    componentDidUpdate()
+    componentDidMount()
     { 
     }
 
