@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Grid, Header, Dimmer, Loader, Form, Message } from 'semantic-ui-react'
+import { Segment, Grid, Header, Dimmer, Loader, Form } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import {getMealPlanForEdition, addToMealPlan, removeFromMealPlan, changeMealPlanName} from '../../actions/mealPlan'
@@ -65,13 +65,37 @@ class MealPlanEditorPartial extends React.Component {
         
     }
 
+    deleteFromSnap = (productId, quantity) =>
+    {
+        this.props.removeFromMealPlan(this.state.day, 'snap', productId, quantity);
+        
+    }
+
+    deleteFromLunch = (productId, quantity) =>
+    {
+        this.props.removeFromMealPlan(this.state.day, 'lunch', productId, quantity);
+        
+    }
+
+    deleteFromDinner = (productId, quantity) =>
+    {
+        this.props.removeFromMealPlan(this.state.day, 'dinner', productId, quantity);
+        
+    }
+
+    deleteFromSupper = (productId, quantity) =>
+    {
+        this.props.removeFromMealPlan(this.state.day, 'supper', productId, quantity);
+        
+    }
+
     render() {
         return (
             <Segment>
                 <Dimmer active={this.state.fetching || this.state.loading} inverted>
                     <Loader size='large'>Pobieranie danych...</Loader>
                 </Dimmer>
-                <Grid>
+                <Grid>  
                     <Grid.Column width={1}>
                         <ButtonsForDaysPartial completeDays={this.state.completeDays} setDay={this.setDay} currentlyEditedDay={this.state.day} />
                     </Grid.Column>
@@ -91,23 +115,26 @@ class MealPlanEditorPartial extends React.Component {
                                 <Segment attached>
                                     <Header as='h5' attached='top'>Śniadanie</Header> 
                                     <Segment attached>
-                                        <SingleMealEditor meal={this.props.mealPlan} day={this.state.day} delete={this.deleteFromBreakfast} />
+                                        <SingleMealEditor mealType="breakfast" meal={this.props.mealPlan} day={this.state.day} delete={this.deleteFromBreakfast} />
                                     </Segment>
                                     <Header as='h5' attached='top'>Drugie śniadanie</Header> 
                                     <Segment attached>
-                                        a
+                                        <SingleMealEditor mealType="snap" meal={this.props.mealPlan} day={this.state.day} delete={this.deleteFromSnap} />
                                     </Segment>
                                     <Header as='h5' attached='top'>Obiad</Header> 
                                     <Segment attached>
-                                        a
+                                        <SingleMealEditor mealType="lunch" meal={this.props.mealPlan} day={this.state.day} delete={this.deleteFromLunch} />
+
                                     </Segment>
                                     <Header as='h5' attached='top'>Podwieczorek</Header> 
                                     <Segment attached>
-                                        a
+                                        <SingleMealEditor mealType="dinner" meal={this.props.mealPlan} day={this.state.day} delete={this.deleteFromDinner} />
+
                                     </Segment>
                                     <Header as='h5' attached='top'>Kolacja</Header> 
                                     <Segment attached>
-                                        a
+                                        <SingleMealEditor mealType="supper" meal={this.props.mealPlan} day={this.state.day} delete={this.deleteFromSupper} />
+
                                     </Segment>
                                 </Segment>
                             </div>
