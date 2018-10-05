@@ -50,5 +50,7 @@ export default {
     },
     products: {
         getProduct: (productId) => axios.get(`api/products/${productId}`).then(res=>res.data),
+        get: (productName) => axios.get('api/products/', {params: {productName }}).then(res=>res.data.results),
+
     }
 }
