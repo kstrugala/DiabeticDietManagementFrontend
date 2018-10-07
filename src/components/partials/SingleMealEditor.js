@@ -112,7 +112,7 @@ class SingleMealEditor extends React.Component {
                     <Table.Footer>
                         <Table.Row>
                             <Table.HeaderCell colSpan='7'>
-                                <ProductSearchForm />        
+                                <ProductSearchForm  addToPlan={this.props.addToPlan}/>        
                             </Table.HeaderCell>
                         </Table.Row>
                     </Table.Footer>
@@ -131,6 +131,7 @@ SingleMealEditor.propTypes = {
     meal: PropTypes.array.isRequired, // eslint-disable-line
     mealType: PropTypes.string.isRequired,
     delete: PropTypes.func.isRequired,
+    addToPlan: PropTypes.func.isRequired,
     getProduct: PropTypes.func.isRequired // eslint-disable-line
 }
 export default connect(null, {getProduct})(SingleMealEditor);

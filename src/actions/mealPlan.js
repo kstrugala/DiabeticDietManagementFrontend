@@ -17,11 +17,11 @@ export const changeMealPlanName = (name) => ({
     name
 })
 
-export const addToMealPlan = (day, meal, productId, quantity) => ({
+export const addToMealPlan = (day, meal, product, quantity) => ({
     type: ADD_TO_MEAL_PLAN,
     meal,
     day,
-    productId,
+    product,
     quantity
 })
 

@@ -18,23 +18,28 @@ export default function mealPlan(state = {}, action = {}) {
         }
         if(action.meal==='breakfast')
         {
-            mp.dailyPlans.find(x=>x.day===action.day).breakfast.products.push({productId:action.productId, quantity:action.quantity})
+            mp.dailyPlans.find(x=>x.day===action.day).breakfast.products.push({productId:action.product.id, productName:action.product.productName, glycemicIndex:action.product.glycemicIndex, glycemicLoad:action.product.glycemicLoad, 
+                carbohydrates:action.product.carbohydrates, serveSize: action.product.serveSize, quantity:action.quantity})
         }
         if(action.meal==='snap')
         {
-            mp.dailyPlans.find(x=>x.day===action.day).snap.products.push({productId:action.productId, quantity:action.quantity})
+            mp.dailyPlans.find(x=>x.day===action.day).snap.products.push({productId:action.product.id, productName:action.product.productName, glycemicIndex:action.product.glycemicIndex, glycemicLoad:action.product.glycemicLoad, 
+                carbohydrates:action.product.carbohydrates, serveSize: action.product.serveSize, quantity:action.quantity})
         }
         if(action.meal==='lunch')
         {
-            mp.dailyPlans.find(x=>x.day===action.day).lunch.products.push({productId:action.productId, quantity:action.quantity})
+            mp.dailyPlans.find(x=>x.day===action.day).lunch.products.push({productId:action.product.id, productName:action.product.productName, glycemicIndex:action.product.glycemicIndex, glycemicLoad:action.product.glycemicLoad, 
+                carbohydrates:action.product.carbohydrates, serveSize: action.product.serveSize, quantity:action.quantity})
         }
         if(action.meal==='dinner')
         {
-            mp.dailyPlans.find(x=>x.day===action.day).dinner.products.push({productId:action.productId, quantity:action.quantity})
+            mp.dailyPlans.find(x=>x.day===action.day).dinner.products.push({productId:action.product.id, productName:action.product.productName, glycemicIndex:action.product.glycemicIndex, glycemicLoad:action.product.glycemicLoad, 
+                carbohydrates:action.product.carbohydrates, serveSize: action.product.serveSize, quantity:action.quantity})
         }
         if(action.meal==='supper')
         {
-            mp.dailyPlans.find(x=>x.day===action.day).supper.products.push({productId:action.productId, quantity:action.quantity})
+            mp.dailyPlans.find(x=>x.day===action.day).supper.products.push({productId:action.product.id, productName:action.product.productName, glycemicIndex:action.product.glycemicIndex, glycemicLoad:action.product.glycemicLoad, 
+                carbohydrates:action.product.carbohydrates, serveSize: action.product.serveSize, quantity:action.quantity})
         }
         return {...state, mealPlan: mp}
     case REMOVE_FROM_MEAL_PLAN:
