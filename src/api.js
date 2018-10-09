@@ -45,8 +45,9 @@ export default {
     },
     plan: {
         get: (patientId) => axios.get(`api/patients/${patientId}/recommendedmealplan`).then(res=>res.data),
-        getForEdition: (patientId) => axios.get(`api/patients/${patientId}/recommendedmealplan?versionForEdition=true`).then(res=>res.data)
-
+        getForPatient: () => axios.get(`api/patient/recommendedmealplan`).then(res=>res.data),
+        getForEdition: (patientId) => axios.get(`api/patients/${patientId}/recommendedmealplan?versionForEdition=true`).then(res=>res.data),
+        put: (patientId, plan) => axios.put(`api/patients/${patientId}/recommendedmealplan`, plan).then(res=>res.data)
     },
     products: {
         getProduct: (productId) => axios.get(`api/products/${productId}`).then(res=>res.data),

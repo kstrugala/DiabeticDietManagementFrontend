@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from "react-redux";
 import { Form, Loader, Dimmer, Message, Menu, Header, Segment, Button, Grid } from 'semantic-ui-react'
 import PropTypes from "prop-types";
-import {getMealPlan} from '../../actions/mealPlan'
+import {getMealPlan, getMealPlanForPatient} from '../../actions/mealPlan'
 import DailyPlanPartial from './DailyPlanPartial';
 import WeeklyPlanPartial from './WeeklyPlanPartial';
 
@@ -33,10 +33,19 @@ class MealPlanPartial extends React.Component {
     fetchMealPlan = () => {
         this.setState({loading: true});
         
-        this.props.getMealPlan(this.props.patientId).then(()=>{
-            this.setState({loading: false, isFetched:true}
-            );
-        });
+        if(this.props.patientId === "null")
+        {
+            this.props.getMealPlanForPatient().then(()=>{
+                this.setState({loading: false, isFetched:true}
+                );
+            });
+        }
+        else {
+            this.props.getMealPlan(this.props.patientId).then(()=>{
+                this.setState({loading: false, isFetched:true}
+                );
+            });
+        }
     }
 
     
@@ -182,6 +191,7 @@ class MealPlanPartial extends React.Component {
 MealPlanPartial.propTypes = {
     patientId: PropTypes.string.isRequired,
     getMealPlan: PropTypes.func.isRequired,
+    getMealPlanForPatient: PropTypes.func.isRequired,
     mealPlan: PropTypes.shape({
         name: PropTypes.string.isRequired,
         dailyPlans: PropTypes.shape({
@@ -205,4 +215,4 @@ const mapStateToPros = (state) =>
     return  { mealPlan: {} }; 
 }
 
-export default connect(mapStateToPros, {getMealPlan})(MealPlanPartial);
+export default connect(mapStateToPros, {getMealPlan, getMealPlanForPatient})(MealPlanPartial);

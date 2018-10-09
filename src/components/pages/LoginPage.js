@@ -33,6 +33,10 @@ class LoginPage extends React.Component
         {
             this.props.history.push("/receptionist");
         }
+        else if(this.props.role === "Patient")
+        {
+            this.props.history.push("/patient");
+        }
     }
 
 

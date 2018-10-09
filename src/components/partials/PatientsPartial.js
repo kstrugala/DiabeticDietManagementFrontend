@@ -272,6 +272,7 @@ class PatientsPartial extends React.Component {
 
                     <Divider />
                     <Button onClick={()=>{this.patientDetails(this.state.patientId)}} color="red" icon><Icon name="cancel" /><span>Anuluj</span></Button>
+
                 </Segment>
                 }
 

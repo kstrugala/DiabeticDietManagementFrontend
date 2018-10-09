@@ -1,8 +1,8 @@
 import React from 'react'
-import { Segment, Grid, Header, Dimmer, Loader, Form } from 'semantic-ui-react'
+import { Segment, Grid, Header, Dimmer, Loader, Form, Button, Icon, Divider, Message } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import {getMealPlanForEdition, addToMealPlan, removeFromMealPlan, changeMealPlanName} from '../../actions/mealPlan'
+import {getMealPlanForEdition, addToMealPlan, removeFromMealPlan, changeMealPlanName, putMealPlan} from '../../actions/mealPlan'
 import {getProduct} from '../../actions/products'
 import ButtonsForDaysPartial from './ButtonsForDaysPartial'
 import SingleMealEditor from './SingleMealEditor'
@@ -23,7 +23,9 @@ class MealPlanEditorPartial extends React.Component {
         loading: false,
         day: 1,
         completeDays: [],
-        breakfast: []
+        breakfast: [],
+        saved:false,
+        error: false
 
     }
 
@@ -119,6 +121,26 @@ class MealPlanEditorPartial extends React.Component {
         this.setCompletedDays()
     }
     
+    save = () => {
+        let allDaysFilled = true;
+        for(let d in this.state.completeDays) // eslint-disable-line
+        {
+            if(d===false)
+            {
+                allDaysFilled=false;
+                break;
+            }
+        }
+
+        if(allDaysFilled)
+        {
+            this.props.putMealPlan(this.props.patientId, this.props.mealPlan).then(()=>{
+                this.setState({saved: true, error: false})
+            }).catch(()=>{
+                this.setState({error: true, saved: false})
+            })
+        }
+    }
 
     render() {
         return (
@@ -126,6 +148,12 @@ class MealPlanEditorPartial extends React.Component {
                 <Dimmer active={this.state.fetching || this.state.loading} inverted>
                     <Loader size='large'>Pobieranie danych...</Loader>
                 </Dimmer>
+                {this.state.saved &&
+                    <Message success>Plan został zapisany</Message>
+                }
+                {this.state.error &&
+                    <Message error>Wystąpił błąd (sprawdź czy wypełniłeś wszyskie dni)</Message>
+                }
                 <Grid>  
                     <Grid.Column width={1}>
                         <ButtonsForDaysPartial completeDays={this.state.completeDays} setDay={this.setDay} currentlyEditedDay={this.state.day} />
@@ -174,7 +202,10 @@ class MealPlanEditorPartial extends React.Component {
                     </Grid.Column>
                     }
                 </Grid>
-            </Segment>
+                <Divider />
+                <Button onClick={this.save} color="green" icon><Icon name="save" /><span>Zapisz</span></Button>
+
+            </Segment>            
         )
     }
 }
@@ -184,6 +215,7 @@ MealPlanEditorPartial.propTypes = {
     patientId: PropTypes.string.isRequired,
     getMealPlanForEdition: PropTypes.func.isRequired,
     getProduct: PropTypes.func.isRequired, // eslint-disable-line
+    putMealPlan: PropTypes.func.isRequired,
     addToMealPlan: PropTypes.func.isRequired,
     removeFromMealPlan: PropTypes.func.isRequired,
     changeMealPlanName: PropTypes.func.isRequired,
@@ -205,4 +237,4 @@ const mapStateToPros = (state) =>
 }
 
 
-export default connect(mapStateToPros, {getMealPlanForEdition, getProduct, addToMealPlan, removeFromMealPlan, changeMealPlanName})(MealPlanEditorPartial);
+export default connect(mapStateToPros, {getMealPlanForEdition, getProduct, addToMealPlan, removeFromMealPlan, changeMealPlanName, putMealPlan})(MealPlanEditorPartial);

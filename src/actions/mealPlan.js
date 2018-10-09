@@ -38,3 +38,8 @@ export const getMealPlan = patientId => dispatch =>
 export const getMealPlanForEdition = patientId => dispatch =>
     api.plan.getForEdition(patientId).then(plan=>dispatch(getPlanForEdition(plan)));
 
+export const putMealPlan = (patientId, plan) => dispatch => // eslint-disable-line
+    api.plan.put(patientId, plan);
+
+export const getMealPlanForPatient = () => dispatch =>
+    api.plan.getForPatient().then(plan=>dispatch(getPlan(plan)));

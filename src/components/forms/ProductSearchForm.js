@@ -98,6 +98,7 @@ class ProductSearchForm extends React.Component {
                                   selection
                                   fluid
                                   closeOnChange
+                                  noResultsMessage="Nie znaleziono produktu."
                                   value={this.state.query}
                                   onSearchChange={this.onSearchChange}
                                   options={this.state.options}

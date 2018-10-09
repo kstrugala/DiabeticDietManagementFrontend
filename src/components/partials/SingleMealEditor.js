@@ -5,7 +5,6 @@ import { Table, Button, Icon } from 'semantic-ui-react'
 import {getProduct} from '../../actions/products'
 import ProductSearchForm from '../forms/ProductSearchForm'
 
-
 class SingleMealEditor extends React.Component {
   
     
@@ -118,7 +117,7 @@ class SingleMealEditor extends React.Component {
                     </Table.Footer>
                 </Table>
                 
-                
+
         
             </div>
         )
