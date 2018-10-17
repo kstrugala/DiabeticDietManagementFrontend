@@ -53,5 +53,10 @@ export default {
         getProduct: (productId) => axios.get(`api/products/${productId}`).then(res=>res.data),
         get: (productName) => axios.get('api/products/', {params: {productName }}).then(res=>res.data.results),
 
+    },
+    dietaryCompliance: {
+        get: () => axios.get('api/patient/dietarycompliance').then(res=>res.data),
+        getByDoctor: (patientId) => axios.get(`api/patients/${patientId}/dietarycompliance`).then(res=>res.data),
+        post: (dietaryCompliance) => axios.post('api/patient/dietarycompliance', dietaryCompliance).then(res=>res.data)
     }
 }

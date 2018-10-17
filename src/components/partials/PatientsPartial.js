@@ -2,12 +2,15 @@ import React from 'react'
 import { Header, Segment, Menu, Input, Icon, Table, Loader, Dimmer, Message, Button, Divider } from 'semantic-ui-react';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import axios from 'axios';
 import { getPatientsInfo, addPatient, deletePatient } from "../../actions/patients"
 import PaginationPartial from "./Pagination"
 import PatientDetailsPartial from "./PatientDetailsPartial"
 import AddPatientForm from '../forms/AddPatientForm'
 import MealPlanPartial from './MealPlanPartial'
 import MealPlanEditorPartial from './MealPlanEditorPartial'
+import DietaryCompliancePartial from "../partials/DietaryCompliancePartial"
+
 
 class PatientsPartial extends React.Component {
 
@@ -59,7 +62,13 @@ class PatientsPartial extends React.Component {
         
 
 
-        this.props.getPatientsInfo(query).then(()=>{this.setState({loading:false})});
+        this.props.getPatientsInfo(query).then(()=>{this.setState({loading:false})}).catch(err=>{
+            if(err.response.status === 401 || err.response.status === 403)
+            {
+                axios.defaults.headers.common.Authorization = `Bearer ${  localStorage.getItem('tokenJWT')}`;
+                this.fetchPatients();
+            }
+        });
     }
 
     isEmpty = (obj) => { // eslint-disable-next-line
@@ -115,6 +124,11 @@ class PatientsPartial extends React.Component {
     showMealPlanEditor = () =>
     {
         this.setState({activeElement:"mealPlanEditor"});
+    }
+
+    showDietaryCompliance = () =>
+    {
+        this.setState({activeElement:"dietaryComplinace"});
     }
 
     render() {
@@ -247,6 +261,8 @@ class PatientsPartial extends React.Component {
                     <div>
                         <Button onClick={this.showMealPlan} color="blue" icon><Icon name="clipboard list" /><span>Jadłospis</span></Button>
                         <Button onClick={this.showMealPlanEditor} color="teal" icon><Icon name="clipboard check" /><span>Edytuj jadłospis</span></Button>
+                        <Button onClick={this.showDietaryCompliance} color="violet" icon><Icon name="check square outline" /><span>Przestrzeganie diety</span></Button>
+
                     </div>
                     }
 
@@ -275,6 +291,11 @@ class PatientsPartial extends React.Component {
 
                 </Segment>
                 }
+
+                {this.state.activeElement==="dietaryComplinace" &&
+                <DietaryCompliancePartial userRole="other" patientId={this.state.patientId} />
+                }
+
 
             </Segment>
 

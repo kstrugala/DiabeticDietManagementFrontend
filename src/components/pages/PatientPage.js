@@ -5,10 +5,12 @@ import PropTypes from "prop-types";
 import { Container, Dropdown, Menu, Icon, Segment, Header } from "semantic-ui-react";
 import * as actions from "../../actions/auth"
 import MealPlanPartial from "../partials/MealPlanPartial";
+import DietaryCompliancePartial from "../partials/DietaryCompliancePartial"
 
 class PatientPage extends React.Component {
     state = {
         showDiet: true, 
+        showDietaryCompliance: false
     }
 
     logoutClicked = ()=>{
@@ -16,7 +18,8 @@ class PatientPage extends React.Component {
         this.props.history.push("/");
     }
     
-    showDiet=()=>this.setState({showDiet:true});
+    showDiet=()=>this.setState({showDiet:true, showDietaryCompliance: false});
+    showDietaryCompliance=()=>this.setState({showDiet:false, showDietaryCompliance: true});
 
     render() {
         if (!this.props.isAuthenticated) {
@@ -32,7 +35,8 @@ class PatientPage extends React.Component {
               Diabetic Diet Management
                         </Menu.Item>
                         <Menu.Item as="a" onClick={this.showDiet}><Icon name='food' />Jadłospis</Menu.Item>
-                        
+                        <Menu.Item as="a" onClick={this.showDietaryCompliance}><Icon name='calendar check outline' />Przestrzeganie planu</Menu.Item>
+
 
                         <Menu.Menu position="right">
                             <Dropdown item simple text="Konto">
@@ -51,6 +55,14 @@ class PatientPage extends React.Component {
                         <MealPlanPartial patientId="null"/>
                     </Segment>
                     }
+
+                    {this.state.showDietaryCompliance &&
+                        <Segment>
+                            <Header as='h3' dividing>Przestrzeganie planu</Header>
+                            <DietaryCompliancePartial userRole="patient" patientId="null" />
+                        </Segment>
+                    }
+
                 </Container>
             </div>
         )

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from "react-redux";
 import { Form, Loader, Dimmer, Message, Menu, Header, Segment, Button, Grid } from 'semantic-ui-react'
 import PropTypes from "prop-types";
+import axios from 'axios';
 import {getMealPlan, getMealPlanForPatient} from '../../actions/mealPlan'
 import DailyPlanPartial from './DailyPlanPartial';
 import WeeklyPlanPartial from './WeeklyPlanPartial';
@@ -36,14 +37,25 @@ class MealPlanPartial extends React.Component {
         if(this.props.patientId === "null")
         {
             this.props.getMealPlanForPatient().then(()=>{
-                this.setState({loading: false, isFetched:true}
-                );
+                this.setState({loading: false, isFetched:true});
+            }).catch(err=>{
+                if(err.response.status === 401 || err.response.status === 403 )
+                {
+                    axios.defaults.headers.common.Authorization = `Bearer ${  localStorage.getItem('tokenJWT')}`;
+                    this.fetchMealPlan();
+                }
             });
         }
         else {
             this.props.getMealPlan(this.props.patientId).then(()=>{
                 this.setState({loading: false, isFetched:true}
                 );
+            }).catch(err=>{
+                if(err.response.status === 401 || err.response.status === 403 )
+                {
+                    axios.defaults.headers.common.Authorization = `Bearer ${  localStorage.getItem('tokenJWT')}`;
+                    this.fetchMealPlan();
+                }
             });
         }
     }

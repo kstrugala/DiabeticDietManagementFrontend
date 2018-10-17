@@ -19,7 +19,7 @@ const DailyPlanPartial  = (props) => (
                                 <Table.HeaderCell>Ładunek glikemiczny (GL)</Table.HeaderCell>
                             }    
                             {props.details===true && 
-                                <Table.HeaderCell>Węglowdany</Table.HeaderCell>
+                                <Table.HeaderCell>Węglowodany</Table.HeaderCell>
                             }
                             <Table.HeaderCell>Wielkość porcji</Table.HeaderCell>
                             <Table.HeaderCell>Ilość porcji</Table.HeaderCell>
