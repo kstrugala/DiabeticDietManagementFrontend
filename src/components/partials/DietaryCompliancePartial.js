@@ -100,7 +100,7 @@ class DietaryCompliancePartial extends React.Component {
       }
       this.props.postDietaryCompliance(payload).then(()=>{
           this.fetchDietaryCompliance();
-          this.setState({open:false});
+          this.setState({open:false, eatenProducts: []});
       })
   }
 
