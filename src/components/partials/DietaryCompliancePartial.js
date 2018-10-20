@@ -2,9 +2,10 @@ import React from 'react'
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import axios from 'axios'
-import { Icon, Table, Loader, Dimmer, Divider, Button, Modal, Header, Form, Checkbox } from 'semantic-ui-react';
+import { Icon, Table, Loader, Dimmer, Divider, Button, Modal, Header, Form, Checkbox, Menu } from 'semantic-ui-react';
 import { getDietaryComplianceInfo, getDietaryComplianceInfoByDoctor, postDietaryCompliance } from '../../actions/diateryCompliance'
 import EatenProductsEditor from './EatenProductsEditor'
+import PaginationPartial from "./Pagination"
 
 const isEmpty = (obj) => { // eslint-disable-next-line
   for(const key in obj) { 
@@ -29,20 +30,33 @@ class DietaryCompliancePartial extends React.Component {
       eatenProducts:[],
       wasComplied:false,
       mealType:"",
-      open: false
+      open: false,
+      queryPage:1,
+      queryPageSize:10,
   }
   
   componentDidMount() {
       this.fetchDietaryCompliance();
   }
   
+
+
   onChange = (e, data) => {
       this.setState({ mealType: data.value });
+  };
+
+  onPageChange = (e, { activePage })=>{
+      this.setState({queryPage: activePage}, ()=>{this.fetchDietaryCompliance();});
   };
 
   onWasCompliedChange = () =>{
       this.setState({wasComplied:!this.state.wasComplied})
   }
+
+  setPageSize = (e) => {
+      this.setState({queryPageSize:parseInt(e.target.innerHTML, 10)}, ()=>{this.fetchDietaryCompliance();});
+     
+  };
 
   setProducts = (eatenProducts) => {
       this.setState({eatenProducts})
@@ -50,10 +64,11 @@ class DietaryCompliancePartial extends React.Component {
 
   fetchDietaryCompliance = () => {
       this.setState({loading: true})
-
+      const query = {pageSize: this.state.queryPageSize, page: this.state.queryPage }
+      
       if(this.props.patientId==='null')
       {
-          this.props.getDietaryComplianceInfo().then(
+          this.props.getDietaryComplianceInfo(query).then(
               this.setState({loading: false})
           ).catch(err=>{
               if(err.response.status === 401 || err.response.status === 403)
@@ -65,7 +80,7 @@ class DietaryCompliancePartial extends React.Component {
       }
       else
       {
-          this.props.getDietaryComplianceInfoByDoctor(this.props.patientId).then(
+          this.props.getDietaryComplianceInfoByDoctor(this.props.patientId, query).then(
               this.setState({loading: false})
           ).catch(err=>{
               if(err.response.status === 401 || err.response.status === 403)
@@ -169,6 +184,22 @@ class DietaryCompliancePartial extends React.Component {
 
                   
                   </Table.Body>
+
+                  <Table.Footer>
+                      <Table.Row>
+                          <Table.HeaderCell colSpan='4'>
+                              <Menu compact>
+                                  <Menu.Item active={this.state.queryPageSize===10} onClick={this.setPageSize}>10</Menu.Item>
+                                  <Menu.Item active={this.state.queryPageSize===30} onClick={this.setPageSize}>30</Menu.Item>
+                                  <Menu.Item active={this.state.queryPageSize===50} onClick={this.setPageSize}>50</Menu.Item>
+                              </Menu>
+                              {!isEmpty(this.props.dietaryCompliance) &&
+                                    <PaginationPartial pagination={this.props.pagination} onPageChange={this.onPageChange} />
+                              }
+                          </Table.HeaderCell>
+                      </Table.Row>
+                  </Table.Footer>
+
               </Table>
               {this.props.userRole === "patient" &&
               <div>
@@ -204,13 +235,14 @@ DietaryCompliancePartial.propTypes = {
     postDietaryCompliance: PropTypes.func.isRequired,
     userRole: PropTypes.string.isRequired,
     patientId: PropTypes.string.isRequired,
+    pagination: PropTypes.shape({}).isRequired,
 }
 
 const mapStateToPros = (state) =>
 {
     if(typeof(state.dietaryCompliance) !=='undefined' && !isEmpty(state.dietaryCompliance))
-        return { dietaryCompliance: state.dietaryCompliance.dietaryCompliance };
-    return  { dietaryCompliance: {} }; 
+        return { dietaryCompliance: state.dietaryCompliance.dietaryCompliance.results, pagination: state.dietaryCompliance.dietaryCompliance.pagination };
+    return  { dietaryCompliance: {}, pagination: {} }; 
 }
 
 export default connect(mapStateToPros, {getDietaryComplianceInfo, getDietaryComplianceInfoByDoctor, postDietaryCompliance})(DietaryCompliancePartial);

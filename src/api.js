@@ -55,8 +55,20 @@ export default {
 
     },
     dietaryCompliance: {
-        get: () => axios.get('api/patient/dietarycompliance').then(res=>res.data),
-        getByDoctor: (patientId) => axios.get(`api/patients/${patientId}/dietarycompliance`).then(res=>res.data),
+        get: (query) => axios.get('api/patient/dietarycompliance', 
+            {
+                params:{
+                    pageSize: query.pageSize,
+                    page: query.page
+                }}
+        ).then(res=>res.data),
+        getByDoctor: (patientId, query) => axios.get(`api/patients/${patientId}/dietarycompliance`,
+            {
+                params:{
+                    pageSize: query.pageSize,
+                    page: query.page
+                }}
+        ).then(res=>res.data),
         post: (dietaryCompliance) => axios.post('api/patient/dietarycompliance', dietaryCompliance).then(res=>res.data)
     }
 }

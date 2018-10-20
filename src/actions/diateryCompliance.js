@@ -6,11 +6,11 @@ export const getDietaryCompliance = dietaryCompliance =>({
     dietaryCompliance
 });
 
-export const getDietaryComplianceInfo = () => dispatch =>
-    api.dietaryCompliance.get().then(dietaryCompliance => dispatch(getDietaryCompliance(dietaryCompliance)));   
+export const getDietaryComplianceInfo = (query) => dispatch =>
+    api.dietaryCompliance.get(query).then(dietaryCompliance => dispatch(getDietaryCompliance(dietaryCompliance)));   
 
-export const getDietaryComplianceInfoByDoctor = (patientId) => dispatch =>
-    api.dietaryCompliance.getByDoctor(patientId).then(dietaryCompliance => dispatch(getDietaryCompliance(dietaryCompliance)));   
+export const getDietaryComplianceInfoByDoctor = (patientId, query) => dispatch =>
+    api.dietaryCompliance.getByDoctor(patientId, query).then(dietaryCompliance => dispatch(getDietaryCompliance(dietaryCompliance)));   
 
 export const postDietaryCompliance = (payload) => dispatch => //eslint-disable-line
     api.dietaryCompliance.post(payload);   
