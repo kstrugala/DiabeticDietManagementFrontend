@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { GET_DIETARY_COMPLIANCE } from "../types";
 import api from "../api";
 
