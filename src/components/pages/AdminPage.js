@@ -2,19 +2,22 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import PropTypes from "prop-types";
-import { Container, Dropdown, Menu, Icon } from "semantic-ui-react";
+import { Container, Dropdown, Menu, Icon, Header, Segment } from "semantic-ui-react";
 import * as actions from "../../actions/auth"
 
 import PatientsPartial from "../partials/PatientsPartial";
 import DoctorsPartial from "../partials/DoctorsPartial";
 import ReceptionistPartial from "../partials/ReceptionistPartial";
+import ChangePasswordPartial from "../partials/ChangePasswordPartial"
 
 class AdminPage extends React.Component {
  
     state = {
         showPatients: true, 
         showDoctors: false,
-        showReceptionists:false
+        showReceptionists:false,
+        showChangePassword: false
+
     }
 
     logoutClicked = ()=>{
@@ -26,15 +29,25 @@ class AdminPage extends React.Component {
         this.setState({
             showPatients: true, 
             showDoctors: false,
-            showReceptionists:false
+            showReceptionists:false,
+            showChangePassword: false
         });
     }
+
+    showChangePassword=()=>this.setState(
+        {
+            showPatients: false, 
+            showDoctors: false,
+            showReceptionists:false,
+            showChangePassword: true
+        });
 
     showDoctorsClicked = () =>{
         this.setState({
             showPatients: false, 
             showDoctors: true,
-            showReceptionists:false
+            showReceptionists:false,
+            showChangePassword: false
         });
     }
 
@@ -42,7 +55,8 @@ class AdminPage extends React.Component {
         this.setState({
             showPatients: false, 
             showDoctors: false,
-            showReceptionists:true
+            showReceptionists:true,
+            showChangePassword: false
         });
     }
 
@@ -68,6 +82,7 @@ class AdminPage extends React.Component {
                         <Menu.Menu position="right">
                             <Dropdown item simple text="Konto">
                                 <Dropdown.Menu>
+                                    <Dropdown.Item onClick={this.showChangePassword}>Zmiana hasła</Dropdown.Item>
                                     <Dropdown.Item onClick={logoutClicked}>Wyloguj</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -79,6 +94,12 @@ class AdminPage extends React.Component {
                     {showPatients ? <PatientsPartial userRole="admin" /> : null}
                     {showDoctors ? <DoctorsPartial /> : null}
                     {showReceptionists ? <ReceptionistPartial /> : null}
+                    {this.state.showChangePassword &&
+                        <Segment>
+                            <Header as='h3' dividing>Zmiana hasła</Header>
+                            <ChangePasswordPartial />
+                        </Segment>
+                    }
                 </Container>
             </div>
         );

@@ -2,15 +2,17 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import PropTypes from "prop-types";
-import { Container, Dropdown, Menu, Icon } from "semantic-ui-react";
+import { Container, Dropdown, Menu, Icon, Header, Segment } from "semantic-ui-react";
 import * as actions from "../../actions/auth"
 
 import PatientsPartial from "../partials/PatientsPartial";
+import ChangePasswordPartial from "../partials/ChangePasswordPartial"
 
 class DoctorPage extends React.Component {
  
     state = {
         showPatients: true, 
+        showChangePassword: false
     }
 
     logoutClicked = ()=>{
@@ -20,9 +22,11 @@ class DoctorPage extends React.Component {
 
     showPatientClicked = () =>{
         this.setState({
-            showPatients: true
+            showPatients: true,
+            showChangePassword: false
         });
     }
+    showChangePassword=()=>this.setState({showPatients: false, showChangePassword: true});
 
     
 
@@ -47,6 +51,7 @@ class DoctorPage extends React.Component {
                         <Menu.Menu position="right">
                             <Dropdown item simple text="Konto">
                                 <Dropdown.Menu>
+                                    <Dropdown.Item onClick={this.showChangePassword}>Zmiana hasła</Dropdown.Item>
                                     <Dropdown.Item onClick={logoutClicked}>Wyloguj</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -56,6 +61,12 @@ class DoctorPage extends React.Component {
 
                 <Container style={{ marginTop: "4em", background: "rgb(255, 255, 255)", boxShadow: "rgb(204, 204, 204) 0px 1px 2px" }}>
                     {showPatients ? <PatientsPartial userRole="doctor" /> : null}
+                    {this.state.showChangePassword &&
+                        <Segment>
+                            <Header as='h3' dividing>Zmiana hasła</Header>
+                            <ChangePasswordPartial />
+                        </Segment>
+                    }
                 </Container>
             </div>
         );

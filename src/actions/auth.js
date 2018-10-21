@@ -29,3 +29,6 @@ export const logout = () => dispatch => {
     localStorage.removeItem("tokenJWT");
     dispatch (userLoggedOut({}));
 }
+
+export const changePassword = (payload) => dispatch => // eslint-disable-line
+    api.user.changePassword(payload);

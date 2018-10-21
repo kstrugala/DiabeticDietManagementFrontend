@@ -2,15 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import PropTypes from "prop-types";
-import { Container, Dropdown, Menu, Icon } from "semantic-ui-react";
+import { Container, Dropdown, Menu, Icon, Header, Segment } from "semantic-ui-react";
 import * as actions from "../../actions/auth"
 
 import PatientsPartial from "../partials/PatientsPartial";
+import ChangePasswordPartial from "../partials/ChangePasswordPartial"
 
 class ReceptionistPage extends React.Component {
  
     state = {
-        showPatients: true
+        showPatients: true, 
+        showChangePassword: false
+
     }
 
     logoutClicked = ()=>{
@@ -20,11 +23,12 @@ class ReceptionistPage extends React.Component {
 
     showPatientClicked = () =>{
         this.setState({
-            showPatients: true, 
-            showDoctors: false,
-            showReceptionists:false
+            showPatients: true,
+            showChangePassword: false
         });
     }
+    showChangePassword=()=>this.setState({showPatients: false, showChangePassword: true});
+
 
     
 
@@ -49,6 +53,7 @@ class ReceptionistPage extends React.Component {
                         <Menu.Menu position="right">
                             <Dropdown item simple text="Konto">
                                 <Dropdown.Menu>
+                                    <Dropdown.Item onClick={this.showChangePassword}>Zmiana hasła</Dropdown.Item>
                                     <Dropdown.Item onClick={logoutClicked}>Wyloguj</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -58,6 +63,12 @@ class ReceptionistPage extends React.Component {
 
                 <Container style={{ marginTop: "4em", background: "rgb(255, 255, 255)", boxShadow: "rgb(204, 204, 204) 0px 1px 2px" }}>
                     {showPatients ? <PatientsPartial userRole="receptionist" /> : null}
+                    {this.state.showChangePassword &&
+                        <Segment>
+                            <Header as='h3' dividing>Zmiana hasła</Header>
+                            <ChangePasswordPartial />
+                        </Segment>
+                    }
                 </Container>
             </div>
         );

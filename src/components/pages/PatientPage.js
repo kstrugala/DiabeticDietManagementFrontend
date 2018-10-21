@@ -6,11 +6,13 @@ import { Container, Dropdown, Menu, Icon, Segment, Header } from "semantic-ui-re
 import * as actions from "../../actions/auth"
 import MealPlanPartial from "../partials/MealPlanPartial";
 import DietaryCompliancePartial from "../partials/DietaryCompliancePartial"
+import ChangePasswordPartial from "../partials/ChangePasswordPartial"
 
 class PatientPage extends React.Component {
     state = {
         showDiet: true, 
-        showDietaryCompliance: false
+        showDietaryCompliance: false,
+        showChangePassword: false
     }
 
     logoutClicked = ()=>{
@@ -18,8 +20,9 @@ class PatientPage extends React.Component {
         this.props.history.push("/");
     }
     
-    showDiet=()=>this.setState({showDiet:true, showDietaryCompliance: false});
-    showDietaryCompliance=()=>this.setState({showDiet:false, showDietaryCompliance: true});
+    showDiet=()=>this.setState({showDiet:true, showDietaryCompliance: false, showChangePassword: false});
+    showDietaryCompliance=()=>this.setState({showDiet:false, showDietaryCompliance: true, showChangePassword: false});
+    showChangePassword=()=>this.setState({showDiet:false, showDietaryCompliance: false, showChangePassword: true});
 
     render() {
         if (!this.props.isAuthenticated) {
@@ -41,6 +44,7 @@ class PatientPage extends React.Component {
                         <Menu.Menu position="right">
                             <Dropdown item simple text="Konto">
                                 <Dropdown.Menu>
+                                    <Dropdown.Item onClick={this.showChangePassword}>Zmiana hasła</Dropdown.Item>
                                     <Dropdown.Item onClick={this.logoutClicked}>Wyloguj</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -60,6 +64,13 @@ class PatientPage extends React.Component {
                         <Segment>
                             <Header as='h3' dividing>Przestrzeganie planu</Header>
                             <DietaryCompliancePartial userRole="patient" patientId="null" />
+                        </Segment>
+                    }
+
+                    {this.state.showChangePassword &&
+                        <Segment>
+                            <Header as='h3' dividing>Zmiana hasła</Header>
+                            <ChangePasswordPartial />
                         </Segment>
                     }
 

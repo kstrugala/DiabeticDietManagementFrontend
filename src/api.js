@@ -4,7 +4,8 @@ axios.defaults.headers.common.Authorization = `Bearer ${  localStorage.getItem('
 
 export default {
     user: {
-        login: (credentials) => axios.post('api/login', {"Email": credentials.email, "Password": credentials.password}).then(res => res.data)
+        login: (credentials) => axios.post('api/login', {"Email": credentials.email, "Password": credentials.password}).then(res => res.data),
+        changePassword: (payload) => axios.put('api/user/changepassword', payload).then(res=>res)
     },
     patients: {
         get: (query) => axios.get('api/patients', {

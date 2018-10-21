@@ -49,8 +49,8 @@ class DietaryCompliancePartial extends React.Component {
       this.setState({queryPage: activePage}, ()=>{this.fetchDietaryCompliance();});
   };
 
-  onWasCompliedChange = () =>{
-      this.setState({wasComplied:!this.state.wasComplied})
+  onWasCompliedChange = (e, data) =>{
+      this.setState({wasComplied: data.checked})
   }
 
   setPageSize = (e) => {
@@ -100,7 +100,7 @@ class DietaryCompliancePartial extends React.Component {
       }
       this.props.postDietaryCompliance(payload).then(()=>{
           this.fetchDietaryCompliance();
-          this.setState({open:false, eatenProducts: []});
+          this.setState({open:false, eatenProducts: [], wasComplied: false});
       })
   }
 
