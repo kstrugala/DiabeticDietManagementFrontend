@@ -5,6 +5,7 @@
   "dependencies": {
     "@types/react-redux": "^6.0.7",
     "axios": "^0.18.0",
+    "downloadjs": "^1.4.7",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",

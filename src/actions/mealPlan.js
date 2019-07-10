@@ -1,4 +1,4 @@
-import { GET_PLAN, GET_PLAN_FOR_EDITION, ADD_TO_MEAL_PLAN, REMOVE_FROM_MEAL_PLAN, CHANGE_MEAL_PLAN_NAME } from "../types";
+import { GET_PLAN, GET_PLAN_FOR_EDITION, ADD_TO_MEAL_PLAN, REMOVE_FROM_MEAL_PLAN, CHANGE_MEAL_PLAN_NAME, SET_DAILY_PLANS } from "../types";
 
 import api from "../api";
 
@@ -15,6 +15,11 @@ export const getPlanForEdition = (plan) => ({
 export const changeMealPlanName = (name) => ({
     type: CHANGE_MEAL_PLAN_NAME,
     name
+})
+
+export const setDailyPlansFromFile = (dailyPlans) => ({
+    type: SET_DAILY_PLANS,
+    dailyPlans
 })
 
 export const addToMealPlan = (day, meal, product, quantity) => ({
@@ -43,3 +48,6 @@ export const putMealPlan = (patientId, plan) => dispatch => // eslint-disable-li
 
 export const getMealPlanForPatient = () => dispatch =>
     api.plan.getForPatient().then(plan=>dispatch(getPlan(plan)));
+
+export const setDailyPlans = (dailyPlans) => dispatch =>
+    dispatch(setDailyPlansFromFile(dailyPlans));

@@ -1,4 +1,4 @@
-import { GET_PLAN, GET_PLAN_FOR_EDITION, USER_LOGGED_OUT, ADD_TO_MEAL_PLAN, REMOVE_FROM_MEAL_PLAN, CHANGE_MEAL_PLAN_NAME } from "../types";
+import { GET_PLAN, GET_PLAN_FOR_EDITION, USER_LOGGED_OUT, ADD_TO_MEAL_PLAN, REMOVE_FROM_MEAL_PLAN, CHANGE_MEAL_PLAN_NAME, SET_DAILY_PLANS } from "../types";
 
 export default function mealPlan(state = {}, action = {}) {
     switch (action.type) {
@@ -10,6 +10,10 @@ export default function mealPlan(state = {}, action = {}) {
         const mpn = {...state.mealPlan }; // eslint-disable-line
         mpn.name = action.name;
         return {...state, mealPlan: mpn}
+    case SET_DAILY_PLANS:
+        let sdp =  {...state.mealPlan }; // eslint-disable-line
+        sdp.dailyPlans = [...action.dailyPlans]; // eslint-disable-line
+        return {...state, mealPlan: sdp} 
     case ADD_TO_MEAL_PLAN:
         const mp = {...state.mealPlan }; // eslint-disable-line
         if(typeof(mp.dailyPlans.find(x=>x.day===action.day)) === 'undefined')
